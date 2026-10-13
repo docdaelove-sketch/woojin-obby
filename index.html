@@ -568,14 +568,25 @@
             </div>
             <h2>20단계 완전 정복 대성공!</h2>
             <p>10살 우진이와 함께 모든 몬스터와 레이저를 뚫고 전설의 챔피언 황금 트로피에 도달했습니다!</p>
-            <div class="stats-grid">
+            <div class="stats-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                 <div class="stat-item">
-                    <div class="stat-val" id="win-stars">30</div>
-                    <div class="stat-lbl">모은 황금별</div>
+                    <div class="stat-val" id="win-stars">30 / 30</div>
+                    <div class="stat-lbl">모은 황금별 ⭐</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-val" id="win-time">02:30</div>
-                    <div class="stat-lbl">클리어 시간</div>
+                    <div class="stat-val" id="win-base-time">02:30</div>
+                    <div class="stat-lbl">기본 플레이 시간 ⏱️</div>
+                </div>
+            </div>
+
+            <!-- Missed Star Penalty Notice Box -->
+            <div id="star-penalty-box" style="margin-bottom:12px; padding:8px 10px; border-radius:12px; font-size:12px; font-weight:800; text-align:center;"></div>
+
+            <!-- Final Record with Penalty -->
+            <div class="stats-grid" style="background:#fef08a; border:2px solid #eab308; margin-bottom:14px; padding:10px;">
+                <div class="stat-item" style="width:100%;">
+                    <div class="stat-val" style="color:#854d0e; font-size:22px;" id="win-final-time">02:30</div>
+                    <div class="stat-lbl" style="color:#a16207; font-weight:900;">🏆 최종 랭킹 기록 (별 페널티 합산)</div>
                 </div>
             </div>
 
@@ -1269,7 +1280,7 @@
             bar.rotation.z = Math.PI / 2;
             bar.position.set(x, y, z);
             scene.add(bar);
-            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.024 });
+            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.027 });
         }
 
         function spawnSparks(x, y, z) {
@@ -1374,24 +1385,24 @@
         createPlatform(-3.5, 9.5, 164, 2.5, 0.5, 2.5, 0xfacc15);
         createPowerItem(-3.5, 10.8, 164, 'rocket'); // 🚀 황금 로켓 부스터!
 
-        // [Stage 11] 🧊 반짝이는 얼음 크리스탈 징검다리
+        // [Stage 11] 🧊 반짝이는 얼음 크리스탈 징검다리 (적당한 긴장감의 크리스탈 발판)
         for (let i = 0; i < 4; i++) {
             const z = 175 + i * 3.8;
             const x = (i % 2 === 0) ? -1.3 : 1.3;
-            createPlatform(x, 8.2 + i * 0.3, z, 3.4, 0.6, 3.4, 0x38bdf8);
+            createPlatform(x, 8.2 + i * 0.3, z, 3.1, 0.6, 3.1, 0x38bdf8);
             if (i % 2 === 0) createStar(x, 10.0 + i * 0.3, z); // 별 14, 15
         }
 
         // [Stage 12] 🤖 장난감 로봇 몬스터 패트롤
         createPlatform(0, 9.6, 194, 6, 0.8, 8, 0x0284c7);
-        createEnemy('robot', 0, 10.4, 195, 'x', -1.9, 1.9, 0.04);
+        createEnemy('robot', 0, 10.4, 195, 'x', -1.9, 1.9, 0.042);
         createStar(0, 11.2, 194); // 별 16
 
         // [Stage 13] 🥊 슈퍼 파이어 펀치 글러브 획득 & 몬스터 날리기
         createPlatform(0, 10.0, 206, 6, 0.8, 6, 0xe11d48);
         createPowerItem(0, 11.4, 205, 'punch'); // 🥊 파이어 펀치!
         createPlatform(0, 10.0, 216, 5, 0.8, 10, 0xbe123c);
-        createEnemy('robot', 0, 10.8, 216, 'z', 213, 219, 0.038);
+        createEnemy('robot', 0, 10.8, 216, 'z', 213, 219, 0.04);
         createStar(0, 11.8, 216); // 별 17
 
         // [Stage 14] 🚩 [체크포인트 4] 🌀 더블 소용돌이 레이저 회랑
@@ -1412,7 +1423,7 @@
         for (let i = 0; i < 3; i++) {
             const z = 252 + i * 4.0;
             const x = (i % 2 === 0) ? -1.4 : 1.4;
-            createPlatform(x, 11.0 + i * 0.4, z, 3.4, 0.7, 3.4, 0xf43f5e);
+            createPlatform(x, 11.0 + i * 0.4, z, 3.1, 0.7, 3.1, 0xf43f5e);
             if (i === 1) {
                 createPowerItem(x, 12.8, z, 'mystery'); // ❓ 미스터리 큐브 (로켓 찬스!)
                 createStar(x, 13.0, z); // 별 19
@@ -1452,11 +1463,16 @@
             createPlatform(x, 19.0 + i * 0.5, z, 3.6, 0.7, 3.6, rainbowColors[i]);
             createStar(x, 21.0 + i * 0.5, z); // 별 26, 27, 28, 29
         }
-        createEnemy('robot', 0, 21.8, 350, 'x', -1.8, 1.8, 0.04);
+        // 1) 수문장 로봇 플랫폼 (충분히 넓고 쾌적한 안착 플랫폼)
+        createPlatform(0, 20.8, 353.5, 5.5, 0.8, 5.5, 0x8b5cf6);
+        createEnemy('robot', 0, 21.6, 353.5, 'x', -1.9, 1.9, 0.042);
 
-        // [Stage 20] 🏆 초대형 챔피언 황금 트로피 신전 섬!
-        const winIsland = createPlatform(0, 22.0, 365, 12, 1.5, 12, 0xfacc15);
-        createStar(0, 24.2, 363); // 마지막 별 30!
+        // 2) 최종 트로피 섬 도약 브릿지 발판 (일반 점프로 아주 쉽게 도달할 수 있는 연결 발판)
+        createPlatform(0, 21.2, 358.5, 4.5, 0.8, 3.5, 0x38bdf8);
+
+        // [Stage 20] 🏆 초대형 챔피언 황금 트로피 신전 섬! (일반 점프로 가뿐하게 안착!)
+        const winIsland = createPlatform(0, 21.5, 366.0, 11.0, 1.2, 10.0, 0xfacc15);
+        createStar(0, 23.5, 363.0); // 마지막 별 30!
 
         // Grand Golden Trophy
         const trophyGroup = new THREE.Group();
@@ -1469,7 +1485,7 @@
         const tCup = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 0.7, 1.8, 16), goldMat);
         tCup.position.y = 2.4;
         trophyGroup.add(tCup);
-        trophyGroup.position.set(0, 23.5, 366);
+        trophyGroup.position.set(0, 23.0, 367.0);
         scene.add(trophyGroup);
 
         // Confetti Fireworks Particles Group for Victory
@@ -1801,10 +1817,18 @@
             const rawName = input.value.trim();
             const playerName = rawName || "우진이 친구";
 
+            // 별 1개 누락당 +1분 (60초) 페널티 계산!
+            const totalStars = 30;
+            const missedStars = Math.max(0, totalStars - starsCollected);
+            const penaltySec = missedStars * 60;
+            const finalRecordedTime = gameTime + penaltySec;
+
             const records = getLeaderboard();
             records.push({
                 name: playerName,
-                timeSec: gameTime,
+                timeSec: finalRecordedTime,
+                baseTime: gameTime,
+                missedStars: missedStars,
                 date: new Date().toLocaleDateString()
             });
 
@@ -1814,7 +1838,7 @@
             renderLeaderboard();
 
             // Find player rank
-            const playerRank = records.findIndex(r => r.name === playerName && r.timeSec === gameTime) + 1;
+            const playerRank = records.findIndex(r => r.name === playerName && r.timeSec === finalRecordedTime) + 1;
             const alertBox = document.getElementById('rank-alert-box');
 
             if (playerRank <= 5) {
@@ -1876,8 +1900,29 @@
                 // Show Final Results & Name Input Modal after 3.5s
                 if (cutsceneTimer > 3.5 && document.getElementById('win-modal').style.display !== 'flex') {
                     document.getElementById('cutscene-title').style.display = 'none';
-                    document.getElementById('win-stars').innerText = starsCollected;
-                    document.getElementById('win-time').innerText = document.getElementById('timer-text').innerText;
+
+                    const totalStars = 30;
+                    const missedStars = Math.max(0, totalStars - starsCollected);
+                    const penaltySec = missedStars * 60; // 1 missed star = +1 minute (60 sec)
+                    const finalRecordedTime = gameTime + penaltySec;
+
+                    document.getElementById('win-stars').innerText = `${starsCollected} / ${totalStars}`;
+                    document.getElementById('win-base-time').innerText = formatSec(gameTime);
+                    document.getElementById('win-final-time').innerText = formatSec(finalRecordedTime);
+
+                    const penaltyBox = document.getElementById('star-penalty-box');
+                    if (missedStars === 0) {
+                        penaltyBox.style.background = '#dcfce7';
+                        penaltyBox.style.color = '#15803d';
+                        penaltyBox.style.border = '1.5px solid #22c55e';
+                        penaltyBox.innerHTML = `🌟 <b>퍼펙트 올클리어!</b> 모든 별 30개 완벽 수집! 페널티 +0분!`;
+                    } else {
+                        penaltyBox.style.background = '#ffedd5';
+                        penaltyBox.style.color = '#c2410c';
+                        penaltyBox.style.border = '1.5px solid #f97316';
+                        penaltyBox.innerHTML = `⚠️ <b>별 누락 페널티:</b> 별 ${missedStars}개 미수집으로 <b>+${missedStars}분</b> 추가 페널티 적용!`;
+                    }
+
                     document.getElementById('win-modal').style.display = 'flex';
                 }
 
@@ -2149,7 +2194,7 @@
                 }
 
                 // Goal Trophy Check (Stage 20 Clear!)
-                if (player.z >= 362 && player.y >= 21.0) {
+                if (player.z >= 361.0 && player.y >= 21.0) {
                     startVictoryCutscene();
                 }
             }
@@ -2254,8 +2299,15 @@
         }
 
         function shareGame() {
-            const timeStr = document.getElementById('win-time').innerText;
-            const shareText = `🏆 10살 우진이의 20단계 슈퍼 로블록스 점프맵 완전 정복!\n⏱️ 내 클리어 기록은 [${timeStr}]초야! 너 나 이길 수 있어? 지금 링크 눌러서 도전해봐!\n${window.location.href}`;
+            const totalStars = 30;
+            const missedStars = Math.max(0, totalStars - starsCollected);
+            const penaltySec = missedStars * 60;
+            const finalRecordedTime = gameTime + penaltySec;
+            const finalTimeStr = formatSec(finalRecordedTime);
+            const baseTimeStr = formatSec(gameTime);
+
+            const penaltyNote = (missedStars === 0) ? "⭐ 퍼펙트 30개 올클리어 (페널티 0분)!" : `⚠️ 별 ${missedStars}개 누락 (+${missedStars}분 페널티)`;
+            const shareText = `🏆 10살 우진이의 20단계 슈퍼 로블록스 점프맵 완전 정복!\n⭐ 모은 황금별: [${starsCollected}/${totalStars}]개 (${penaltyNote})\n⏱️ 최종 랭킹 기록: [${finalTimeStr}] (기본: ${baseTimeStr})\n너 나 이길 수 있어? 지금 링크 눌러서 도전해봐!\n${window.location.href}`;
 
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(shareText).then(() => {
