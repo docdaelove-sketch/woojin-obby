@@ -1311,27 +1311,34 @@
 
         // [Stage 3] 🚩 [체크포인트 1] 🟢 슬라임 몬스터 출현! (밟으면 뿅! 처치)
         createPlatform(0, 2.4, 42, 6, 0.8, 9, 0x10b981);
-        createCheckpoint(0, 2.4, 42, "🚩 [3단계 통과] 체크포인트 1 저장!");
-        createEnemy('slime', 0, 3.2, 45, 'x', -1.8, 1.8, 0.035);
-        createStar(0, 4.2, 44); // 별 5
+        createCheckpoint(0, 2.4, 40, "🚩 [3단계 통과] 체크포인트 1 저장!");
+        createEnemy('slime', 0, 3.2, 44, 'x', -1.8, 1.8, 0.035);
+        createStar(0, 4.2, 43); // 별 5
 
-        // [Stage 4] ⚡ 스피드 런웨이 (번개 부스터 획득 & 질주)
-        createPlatform(0, 2.4, 56, 5, 0.8, 10, 0x3b82f6);
-        createPowerItem(0, 3.8, 53, 'speed'); // ⚡ 번개 스피드 부스터!
+        // [Stage 3 -> 4 안전 징검다리] 슬라임 처치 후 점프해서 쉽게 건너는 브릿지 발판!
+        createPlatform(0, 2.4, 48.5, 4.5, 0.8, 3.2, 0x38bdf8);
+
+        // [Stage 4] ⚡ 스피드 런웨이 (번개 부스터 획득 & 시원한 질주)
+        createPlatform(0, 2.4, 56.5, 5.5, 0.8, 11, 0x3b82f6);
+        createPowerItem(0, 3.8, 52.5, 'speed'); // ⚡ 발판 초입에서 바로 획득!
         createStar(0, 4.2, 57); // 별 6
 
         // [Stage 5] 🔴 회전 레이저 타워 & 🛡️ 무적 쉴드 획득
-        createPowerItem(0, 3.8, 68, 'shield'); // 🛡️ 무적 쉴드!
-        createPlatform(0, 2.4, 75, 5.5, 0.7, 10, 0x475569);
-        createLaserBar(0, 3.5, 72, 4.6);
-        createLaserBar(0, 3.5, 78, 4.6);
-        createStar(0, 4.2, 75); // 별 7
+        // 1) 안전 착지 여유 발판: 레이저가 전혀 닿지 않아 안심하고 착지할 수 있는 초록 안전지대!
+        createPlatform(0, 2.4, 65.5, 6.0, 0.8, 5.0, 0x10b981);
+        createPowerItem(0, 3.8, 65.5, 'shield'); // 🛡️ 안전 발판 정중앙에서 여유롭게 쉴드 획득!
+
+        // 2) 레이저 트랩 코스: 안전 착지 구역 이후 넉넉한 간격을 두고 레이저 배치!
+        createPlatform(0, 2.4, 75.0, 5.5, 0.7, 12, 0x475569);
+        createLaserBar(0, 3.5, 74.0, 4.4); // 점프 착지 후 레이저 회피 타이밍을 잴 수 있는 충분한 공간!
+        createLaserBar(0, 3.5, 78.5, 4.4);
+        createStar(0, 4.2, 76.2); // 별 7
 
         // [Stage 6] 🚩 [체크포인트 2] 🚀 슈퍼 점프대 1단 비행!
-        createPlatform(0, 2.4, 88, 6, 0.8, 6, 0xf59e0b);
-        createCheckpoint(0, 2.4, 88, "🚩 [6단계 통과] 체크포인트 2 저장!");
-        createStar(0, 4.0, 88); // 별 8
-        createSpringPad(0, 3.2, 89.5, 0.46, 0.36);
+        createPlatform(0, 2.4, 85.0, 6, 0.8, 6, 0xf59e0b);
+        createCheckpoint(0, 2.4, 84.0, "🚩 [6단계 통과] 체크포인트 2 저장!");
+        createStar(0, 4.0, 85.0); // 별 8
+        createSpringPad(0, 3.2, 86.5, 0.46, 0.36);
 
         // [Stage 7] 🍭 캔디 파스텔 계단 & 🦘 캥거루 점프 스프링
         createPlatform(0, 5.0, 104, 7, 0.8, 7, 0xec4899);
@@ -1391,10 +1398,15 @@
         createPlatform(0, 10.5, 230, 6, 0.8, 6, 0x8b5cf6);
         createCheckpoint(0, 10.5, 230, "🚩 [14단계 통과] 체크포인트 4 저장!");
         createPowerItem(0, 12.0, 230, 'shield'); // 🛡️ 쉴드 보급!
-        createPlatform(0, 10.5, 240, 5, 0.7, 10, 0x475569);
-        createLaserBar(0, 11.6, 237, 4.4);
-        createLaserBar(0, 11.6, 243, 4.4);
-        createStar(0, 12.2, 240); // 별 18
+
+        // 1) 안전 착지 여유 발판 (Safe Landing Zone)
+        createPlatform(0, 10.5, 235.5, 5.5, 0.7, 4.0, 0x10b981);
+
+        // 2) 레이저 트랩 코스 (안전 착지 구역 이후 레이저 배치)
+        createPlatform(0, 10.5, 243.0, 5.5, 0.7, 10.0, 0x475569);
+        createLaserBar(0, 11.6, 241.5, 4.4);
+        createLaserBar(0, 11.6, 246.0, 4.4);
+        createStar(0, 12.2, 243.5); // 별 18
 
         // [Stage 15] 🎈 공중 풍선 바운스 발판 & 미스터리 큐브 2호
         for (let i = 0; i < 3; i++) {
