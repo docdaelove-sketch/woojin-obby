@@ -1050,11 +1050,12 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            let inputX = joyVector.x;
+            // 1. Inputs (Joystick + Keyboard) - 좌우 컨트롤 반전 수정 완료!
+            let inputX = -joyVector.x;
             let inputZ = -joyVector.y;
 
-            if (keys['KeyA'] || keys['ArrowLeft']) inputX -= 1;
-            if (keys['KeyD'] || keys['ArrowRight']) inputX += 1;
+            if (keys['KeyA'] || keys['ArrowLeft']) inputX += 1;
+            if (keys['KeyD'] || keys['ArrowRight']) inputX -= 1;
             if (keys['KeyW'] || keys['ArrowUp']) inputZ += 1;
             if (keys['KeyS'] || keys['ArrowDown']) inputZ -= 1;
 
@@ -1069,7 +1070,7 @@
                 player.vz = inputZ * player.speed;
 
                 if (inputLen > 0.1) {
-                    player.rotY = Math.atan2(inputX, inputZ);
+                    player.rotY = Math.atan2(player.vx, player.vz);
                     woojin.rotation.y = player.rotY;
 
                     animClock += 0.22;
