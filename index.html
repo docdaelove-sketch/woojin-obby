@@ -41,14 +41,57 @@
             pointer-events: none;
             z-index: 10;
         }
-        .hud-card {
-            background: rgba(0, 0, 0, 0.55);
+        .profile-card {
+            background: rgba(0, 0, 0, 0.65);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             color: #fff;
-            padding: 8px 16px;
+            padding: 6px 14px 6px 6px;
+            border-radius: 28px;
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 2px solid rgba(255, 215, 0, 0.6);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+        .profile-img-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #ffd700;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #fff;
+        }
+        .profile-img-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .badge-tag {
+            background: #ffd700;
+            color: #000;
+            padding: 1px 6px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 900;
+            width: fit-content;
+        }
+        .hud-card {
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            color: #fff;
+            padding: 8px 14px;
             border-radius: 20px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -56,20 +99,12 @@
             border: 2px solid rgba(255, 255, 255, 0.25);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
-        .badge-tag {
-            background: #ffcc00;
-            color: #000;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 900;
-        }
         .sound-btn {
             pointer-events: auto;
-            background: rgba(0, 0, 0, 0.55);
+            background: rgba(0, 0, 0, 0.65);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 18px;
+            font-size: 16px;
             padding: 8px 12px;
             border-radius: 20px;
             cursor: pointer;
@@ -92,13 +127,13 @@
         #joystick-zone {
             width: 130px;
             height: 130px;
-            background: rgba(255, 255, 255, 0.18);
-            border: 3px solid rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.22);
+            border: 3px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%;
             position: relative;
             pointer-events: auto;
             touch-action: none;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.18);
         }
         #joystick-thumb {
             width: 54px;
@@ -128,7 +163,6 @@
             pointer-events: auto;
             box-shadow: 0 6px 18px rgba(255, 71, 87, 0.45);
             cursor: pointer;
-            active-transform: scale(0.92);
         }
         #jump-btn:active {
             transform: scale(0.92);
@@ -171,7 +205,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.78);
             display: none;
             justify-content: center;
             align-items: center;
@@ -181,7 +215,7 @@
         .modal-box {
             background: #ffffff;
             border-radius: 28px;
-            padding: 32px 28px;
+            padding: 28px 24px;
             text-align: center;
             max-width: 360px;
             width: 90%;
@@ -192,32 +226,48 @@
             0% { transform: scale(0.7); opacity: 0; }
             100% { transform: scale(1); opacity: 1; }
         }
-        .trophy-emoji {
-            font-size: 64px;
-            margin-bottom: 12px;
+        .winner-avatar-wrap {
+            position: relative;
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 12px;
+        }
+        .winner-avatar-wrap img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 4px solid #ffd700;
+            object-fit: cover;
+            box-shadow: 0 6px 18px rgba(255, 215, 0, 0.5);
+        }
+        .winner-crown {
+            position: absolute;
+            top: -16px;
+            right: -6px;
+            font-size: 32px;
             animation: bounce 1s infinite alternate;
         }
         @keyframes bounce {
             from { transform: translateY(0); }
-            to { transform: translateY(-10px); }
+            to { transform: translateY(-8px); }
         }
         .modal-box h2 {
-            font-size: 24px;
+            font-size: 23px;
             color: #1e293b;
             font-weight: 900;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
         .modal-box p {
             color: #64748b;
-            font-size: 15px;
-            margin-bottom: 20px;
+            font-size: 14px;
+            margin-bottom: 18px;
             line-height: 1.5;
         }
         .stats-grid {
             background: #f1f5f9;
             border-radius: 16px;
-            padding: 14px;
-            margin-bottom: 24px;
+            padding: 12px;
+            margin-bottom: 20px;
             display: flex;
             justify-content: space-around;
         }
@@ -225,7 +275,7 @@
             text-align: center;
         }
         .stat-val {
-            font-size: 20px;
+            font-size: 19px;
             font-weight: 900;
             color: #0f172a;
         }
@@ -243,9 +293,9 @@
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: #fff;
             border: none;
-            padding: 14px;
+            padding: 13px;
             border-radius: 14px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
@@ -254,9 +304,9 @@
             background: #fee500;
             color: #191919;
             border: none;
-            padding: 14px;
+            padding: 13px;
             border-radius: 14px;
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(254, 229, 0, 0.4);
@@ -267,9 +317,14 @@
     <div id="canvas-container"></div>
 
     <div id="hud">
-        <div class="hud-card">
-            <span class="badge-tag">Lv.10 우진</span>
-            <span>⭐ <span id="star-count">0</span> / 10</span>
+        <div class="profile-card">
+            <div class="profile-img-wrap">
+                <img src="woojin.png" alt="우진이">
+            </div>
+            <div class="profile-info">
+                <span class="badge-tag">Lv.10 우진</span>
+                <span>⭐ <span id="star-count">0</span> / 10</span>
+            </div>
         </div>
         <div style="display:flex; gap:8px;">
             <div class="hud-card">
@@ -293,8 +348,11 @@
 
     <div id="win-modal">
         <div class="modal-box">
-            <div class="trophy-emoji">🏆</div>
-            <h2>우진이 탈출 성공!</h2>
+            <div class="winner-avatar-wrap">
+                <img src="woojin.png" alt="우진이">
+                <div class="winner-crown">👑</div>
+            </div>
+            <h2>우진이 탈출 대성공!</h2>
             <p>10살 우진이가 모든 점프맵 장애물을 뚫고 황금 트로피를 차지했습니다!</p>
             <div class="stats-grid">
                 <div class="stat-item">
@@ -315,7 +373,7 @@
 
     <script>
         /* ----------------------------------------------------
-           1. Web Audio API Sounds (No external MP3 needed!)
+           1. Web Audio API Sounds
         ---------------------------------------------------- */
         let audioCtx = null;
         let soundEnabled = true;
@@ -379,7 +437,7 @@
         container.appendChild(renderer.domElement);
 
         // Lighting
-        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.85);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.9);
         scene.add(hemiLight);
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.95);
@@ -394,75 +452,167 @@
         scene.add(dirLight);
 
         /* ----------------------------------------------------
-           3. Build Character: 10-year-old Woojin (Roblox Style)
+           3. Build Character: Woojin (Matching User Photo!)
+              - Short neat bangs (일자 앞머리 뱅 헤어)
+              - Cute ears on sides (귀엽게 쫑긋한 귀)
+              - Bright smile & friendly eyes (눈매와 입꼬리 미소)
+              - White collared shirt with green trim (사진 속 단정한 카라 셔츠)
         ---------------------------------------------------- */
         const woojin = new THREE.Group();
         woojin.position.set(0, 1.5, 0);
         scene.add(woojin);
 
         // Materials
-        const skinMat = new THREE.MeshLambertMaterial({ color: 0xffd1a4 }); // Korean skin tone
-        const hoodieMat = new THREE.MeshLambertMaterial({ color: 0x0284c7 }); // Cool Cyan/Blue Hoodie
-        const pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b }); // Dark navy jeans
-        const capMat = new THREE.MeshLambertMaterial({ color: 0xf59e0b }); // Cool Yellow Cap
-        const shoeMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // White sneakers
+        const skinColor = 0xffe2cd; // Warm, gentle Korean kid skin tone
+        const skinMat = new THREE.MeshLambertMaterial({ color: skinColor });
+        const hairMat = new THREE.MeshLambertMaterial({ color: 0x1f1a17 }); // Glossy dark brownish-black hair
+        const shirtMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // White shirt
+        const greenTrimMat = new THREE.MeshLambertMaterial({ color: 0x15803d }); // School green collar from photo
+        const pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b }); // Navy pants
+        const shoeMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // Clean white sneakers
 
-        // Head
-        const head = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.7, 0.7), skinMat);
+        // Dynamic Canvas Texture for Woojin's Smiling Face
+        const faceCanvas = document.createElement('canvas');
+        faceCanvas.width = 256;
+        faceCanvas.height = 256;
+        const ctx = faceCanvas.getContext('2d');
+
+        // Skin base
+        ctx.fillStyle = '#ffe2cd';
+        ctx.fillRect(0, 0, 256, 256);
+
+        // Eyebrows (neat and gentle)
+        ctx.strokeStyle = '#1f1a17';
+        ctx.lineWidth = 6;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(60, 100); ctx.quadraticCurveTo(85, 92, 110, 102);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(146, 102); ctx.quadraticCurveTo(171, 92, 196, 100);
+        ctx.stroke();
+
+        // Eyes (bright, monolid/almond friendly eyes from photo)
+        ctx.fillStyle = '#111827';
+        // Left eye
+        ctx.beginPath();
+        ctx.ellipse(85, 122, 16, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+        // Right eye
+        ctx.beginPath();
+        ctx.ellipse(171, 122, 16, 12, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Eye sparkle highlights
+        ctx.fillStyle = '#ffffff';
+        ctx.beginPath(); ctx.arc(80, 118, 5, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(166, 118, 5, 0, Math.PI * 2); ctx.fill();
+
+        // Rosy cheeks
+        ctx.fillStyle = 'rgba(255, 130, 130, 0.35)';
+        ctx.beginPath(); ctx.arc(72, 142, 14, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(184, 142, 14, 0, Math.PI * 2); ctx.fill();
+
+        // Nose (cute small dot)
+        ctx.fillStyle = '#e8b89e';
+        ctx.beginPath(); ctx.arc(128, 146, 4, 0, Math.PI * 2); ctx.fill();
+
+        // Smile (warm upward curved smile from photo!)
+        ctx.strokeStyle = '#991b1b';
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(128, 160, 26, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.stroke();
+
+        const faceTexture = new THREE.CanvasTexture(faceCanvas);
+        const faceMat = new THREE.MeshLambertMaterial({ map: faceTexture });
+
+        // Head Box: Front face gets faceMat, other 5 sides get skinMat
+        const headMaterials = [
+            skinMat, // right
+            skinMat, // left
+            skinMat, // top
+            skinMat, // bottom
+            faceMat, // front (+Z)
+            skinMat  // back (-Z)
+        ];
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.72, 0.72), headMaterials);
         head.position.y = 1.35;
         head.castShadow = true;
         woojin.add(head);
 
-        // Cap (Backwards baseball cap)
-        const cap = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.22, 0.74), capMat);
-        cap.position.set(0, 1.62, 0);
-        cap.castShadow = true;
-        woojin.add(cap);
+        // Woojin's 3D Hair (Matching the clean bowl/bangs cut in the photo!)
+        const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.28, 0.76), hairMat);
+        hairTop.position.set(0, 1.62, 0);
+        hairTop.castShadow = true;
+        woojin.add(hairTop);
 
-        const visor = new THREE.Mesh(new THREE.BoxGeometry(0.48, 0.05, 0.35), capMat);
-        visor.position.set(0, 1.54, -0.45); // Turned backwards
-        woojin.add(visor);
+        // Bangs over forehead (neat, slightly layered bangs like in photo)
+        const bangs = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.22, 0.14), hairMat);
+        bangs.position.set(0, 1.54, 0.37);
+        bangs.castShadow = true;
+        woojin.add(bangs);
 
-        // Eyes & Smile
-        const eyeMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
-        const leftEye = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.02), eyeMat);
-        leftEye.position.set(-0.18, 1.38, 0.36);
-        woojin.add(leftEye);
+        // Back and side hair
+        const hairBack = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.45, 0.18), hairMat);
+        hairBack.position.set(0, 1.42, -0.32);
+        woojin.add(hairBack);
 
-        const rightEye = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.02), eyeMat);
-        rightEye.position.set(0.18, 1.38, 0.36);
-        woojin.add(rightEye);
+        // Woojin's Cute Ears (from photo)
+        const leftEar = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.22, 0.16), skinMat);
+        leftEar.position.set(-0.41, 1.35, -0.02);
+        woojin.add(leftEar);
 
-        // Body (Hoodie)
-        const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.9, 0.5), hoodieMat);
+        const rightEar = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.22, 0.16), skinMat);
+        rightEar.position.set(0.41, 1.35, -0.02);
+        woojin.add(rightEar);
+
+        // Body: White Shirt + Green Collar Trim from the photo!
+        const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.88, 0.5), shirtMat);
         body.position.y = 0.65;
         body.castShadow = true;
         woojin.add(body);
 
-        // Yellow Star emblem on hoodie
-        const emblemMat = new THREE.MeshBasicMaterial({ color: 0xffd700 });
-        const emblem = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.24, 0.02), emblemMat);
-        emblem.position.set(0, 0.7, 0.26);
-        woojin.add(emblem);
+        // Green Collar V-Neck Trim on Shirt
+        const collarLeft = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.35, 0.04), greenTrimMat);
+        collarLeft.position.set(-0.16, 0.88, 0.26);
+        collarLeft.rotation.z = -0.4;
+        woojin.add(collarLeft);
 
-        // Arms
+        const collarRight = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.35, 0.04), greenTrimMat);
+        collarRight.position.set(0.16, 0.88, 0.26);
+        collarRight.rotation.z = 0.4;
+        woojin.add(collarRight);
+
+        // Green pocket badge
+        const badge = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.02), greenTrimMat);
+        badge.position.set(-0.24, 0.68, 0.26);
+        woojin.add(badge);
+
+        // Arms (White shirt sleeves + skin hands)
         const leftArmGroup = new THREE.Group();
-        leftArmGroup.position.set(-0.55, 1.0, 0);
-        const leftArm = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.8, 0.3), hoodieMat);
-        leftArm.position.y = -0.4;
-        leftArm.castShadow = true;
-        leftArmGroup.add(leftArm);
+        leftArmGroup.position.set(-0.54, 0.98, 0);
+        const leftArmSleeve = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.52, 0.28), shirtMat);
+        leftArmSleeve.position.y = -0.26;
+        leftArmSleeve.castShadow = true;
+        leftArmGroup.add(leftArmSleeve);
+        const leftHand = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.28, 0.26), skinMat);
+        leftHand.position.y = -0.58;
+        leftArmGroup.add(leftHand);
         woojin.add(leftArmGroup);
 
         const rightArmGroup = new THREE.Group();
-        rightArmGroup.position.set(0.55, 1.0, 0);
-        const rightArm = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.8, 0.3), hoodieMat);
-        rightArm.position.y = -0.4;
-        rightArm.castShadow = true;
-        rightArmGroup.add(rightArm);
+        rightArmGroup.position.set(0.54, 0.98, 0);
+        const rightArmSleeve = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.52, 0.28), shirtMat);
+        rightArmSleeve.position.y = -0.26;
+        rightArmSleeve.castShadow = true;
+        rightArmGroup.add(rightArmSleeve);
+        const rightHand = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.28, 0.26), skinMat);
+        rightHand.position.y = -0.58;
+        rightArmGroup.add(rightHand);
         woojin.add(rightArmGroup);
 
-        // Legs
+        // Legs (Navy Pants + White Sneakers)
         const leftLegGroup = new THREE.Group();
         leftLegGroup.position.set(-0.24, 0.2, 0);
         const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.75, 0.35), pantsMat);
@@ -510,7 +660,6 @@
             mesh.castShadow = true;
             scene.add(mesh);
 
-            // Platform top boundary for collisions
             const pObj = {
                 mesh: mesh,
                 minX: x - w / 2,
@@ -539,14 +688,12 @@
         }
 
         function createCheckpoint(x, y, z, name) {
-            // Flag Pole
             const poleGeo = new THREE.CylinderGeometry(0.06, 0.06, 2.5);
             const poleMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
             const pole = new THREE.Mesh(poleGeo, poleMat);
             pole.position.set(x - 1.2, y + 1.25, z);
             scene.add(pole);
 
-            // Flag Cloth
             const flagGeo = new THREE.BoxGeometry(0.8, 0.5, 0.05);
             const flagMat = new THREE.MeshLambertMaterial({ color: 0xff4757 });
             const flag = new THREE.Mesh(flagGeo, flagMat);
@@ -894,7 +1041,6 @@
                 // Laser Hazard Rotation & Collision
                 for (const h of hazards) {
                     h.mesh.rotation.y += h.speed;
-                    // Check laser collision
                     const dx = player.x - h.centerX;
                     const dz = player.z - h.z;
                     const distToCenter = Math.hypot(dx, dz);
@@ -924,11 +1070,10 @@
 
             /* ----------------------------------------------------
                Camera: Top-Down Isometric (Downwards Angle)
-               Gives clear view of upcoming blocks & jumps!
             ---------------------------------------------------- */
             const camOffsetX = 0;
-            const camOffsetY = 15; // High up top-down view
-            const camOffsetZ = -14; // Behind player
+            const camOffsetY = 15;
+            const camOffsetZ = -14;
 
             const targetCamX = player.x + camOffsetX;
             const targetCamY = player.y + camOffsetY;
@@ -981,7 +1126,6 @@
             }
         }
 
-        // Window resize
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
