@@ -173,13 +173,13 @@
             opacity: 0.9;
         }
 
-        /* Checkpoint message */
+        /* Checkpoint message & Tease message */
         #banner {
             position: absolute;
             top: 30%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
-            background: rgba(0, 0, 0, 0.85);
+            background: rgba(0, 0, 0, 0.88);
             color: #fffa65;
             padding: 14px 28px;
             border-radius: 30px;
@@ -189,13 +189,23 @@
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 50;
             text-align: center;
         }
         #banner.show {
             opacity: 1;
             transform: translate(-50%, -50%) scale(1);
+        }
+        #banner.tease {
+            color: #ff6b81;
+            border-color: #ff4757;
+            animation: wobble 0.4s ease-in-out;
+        }
+        @keyframes wobble {
+            0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+            25% { transform: translate(-50%, -50%) rotate(-6deg) scale(1.05); }
+            75% { transform: translate(-50%, -50%) rotate(6deg) scale(1.05); }
         }
 
         /* Victory Modal */
@@ -330,7 +340,7 @@
             <div class="hud-card">
                 <span>⏱️ <span id="timer-text">00:00</span></span>
             </div>
-            <button class="sound-btn" id="sound-toggle" onclick="toggleSound()">🔊</button>
+            <button class="sound-btn" id="sound-toggle" onclick="toggleSound()">🎵 ON</button>
         </div>
     </div>
 
@@ -373,21 +383,28 @@
 
     <script>
         /* ----------------------------------------------------
-           1. Web Audio API Sounds
+           1. Web Audio API Sounds & Upbeat BGM Sequencer
         ---------------------------------------------------- */
         let audioCtx = null;
         let soundEnabled = true;
+        let bgmGainNode = null;
+        let bgmStep = 0;
+        let bgmInterval = null;
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                bgmGainNode = audioCtx.createGain();
+                bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime); // Gentle BGM volume
+                bgmGainNode.connect(audioCtx.destination);
+                startBGM();
             }
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
             }
         }
 
-        function playTone(freq, type, duration, endFreq = null) {
+        function playTone(freq, type, duration, endFreq = null, volume = 0.18) {
             if (!soundEnabled || !audioCtx) return;
             try {
                 const osc = audioCtx.createOscillator();
@@ -397,7 +414,7 @@
                 if (endFreq) {
                     osc.frequency.exponentialRampToValueAtTime(endFreq, audioCtx.currentTime + duration);
                 }
-                gain.gain.setValueAtTime(0.18, audioCtx.currentTime);
+                gain.gain.setValueAtTime(volume, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -406,18 +423,118 @@
             } catch(e) {}
         }
 
+        // Bouncy Cheerful Roblox-style Chiptune BGM Loop
+        const bgmMelody = [
+            523, 0, 659, 783, 1046, 0, 783, 659,
+            880, 0, 783, 659, 587, 659, 587, 0,
+            523, 0, 659, 783, 880, 0, 1046, 0,
+            1174, 1046, 880, 783, 659, 587, 523, 0
+        ];
+        const bgmBass = [
+            261, 261, 329, 392, 220, 220, 329, 220,
+            174, 174, 261, 174, 196, 196, 293, 196,
+            261, 261, 329, 392, 220, 220, 329, 220,
+            174, 174, 196, 196, 261, 261, 392, 261
+        ];
+
+        function startBGM() {
+            if (bgmInterval) return;
+            bgmInterval = setInterval(() => {
+                if (!soundEnabled || !audioCtx) return;
+                const note = bgmMelody[bgmStep % bgmMelody.length];
+                const bass = bgmBass[bgmStep % bgmBass.length];
+                const now = audioCtx.currentTime;
+
+                // Melody Note
+                if (note > 0) {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(note, now);
+                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
+                    osc.connect(gain);
+                    gain.connect(bgmGainNode);
+                    osc.start(now);
+                    osc.stop(now + 0.15);
+                }
+
+                // Bouncy Bass Note
+                if (bass > 0 && bgmStep % 2 === 0) {
+                    const bOsc = audioCtx.createOscillator();
+                    const bGain = audioCtx.createGain();
+                    bOsc.type = 'sine';
+                    bOsc.frequency.setValueAtTime(bass, now);
+                    bGain.gain.setValueAtTime(0.08, now);
+                    bGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+                    bOsc.connect(bGain);
+                    bGain.connect(bgmGainNode);
+                    bOsc.start(now);
+                    bOsc.stop(now + 0.23);
+                }
+
+                bgmStep++;
+            }, 145); // ~130 BPM Upbeat Tempo
+        }
+
         const playJumpSound = () => playTone(320, 'sine', 0.15, 640);
         const playCoinSound = () => { playTone(987, 'sine', 0.08); setTimeout(() => playTone(1318, 'sine', 0.18), 70); };
         const playSpringSound = () => playTone(250, 'triangle', 0.35, 900);
         const playCheckpointSound = () => { playTone(523, 'triangle', 0.1); setTimeout(() => playTone(659, 'triangle', 0.1), 100); setTimeout(() => playTone(783, 'triangle', 0.25), 200); };
-        const playFallSound = () => playTone(450, 'sawtooth', 0.3, 120);
         const playWinSound = () => {
             [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.35), i * 140));
         };
 
+        // 🤪 Comical Teasing / Mocking Fall Sound ("와-와-와-와앙~ 삐융- 메롱!")
+        const playTeaseFallSound = () => {
+            if (!soundEnabled || !audioCtx) return;
+
+            // Duck BGM during the tease
+            if (bgmGainNode) {
+                bgmGainNode.gain.setValueAtTime(0.005, audioCtx.currentTime);
+                setTimeout(() => {
+                    if (bgmGainNode && soundEnabled) {
+                        bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
+                    }
+                }, 1600);
+            }
+
+            // Descending mocking trombone: 3 comical notes
+            const teaseNotes = [392, 370, 349]; // G4 -> F#4 -> F4
+            teaseNotes.forEach((f, i) => {
+                setTimeout(() => playTone(f, 'sawtooth', 0.22, f - 12, 0.22), i * 210);
+            });
+
+            // Final long comical slide down with vibrato ("와-아-앙~")
+            setTimeout(() => {
+                if (!soundEnabled || !audioCtx) return;
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    const now = audioCtx.currentTime;
+                    osc.frequency.setValueAtTime(330, now); // E4
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.85); // Big comical slide down!
+                    gain.gain.setValueAtTime(0.24, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(now);
+                    osc.stop(now + 0.85);
+                } catch(e) {}
+            }, 630);
+        };
+
         function toggleSound() {
             soundEnabled = !soundEnabled;
-            document.getElementById('sound-toggle').innerText = soundEnabled ? '🔊' : '🔇';
+            if (soundEnabled) {
+                initAudio();
+                if (bgmGainNode) bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
+                document.getElementById('sound-toggle').innerText = '🎵 ON';
+            } else {
+                if (bgmGainNode && audioCtx) bgmGainNode.gain.setValueAtTime(0.0, audioCtx.currentTime);
+                document.getElementById('sound-toggle').innerText = '🔇 OFF';
+            }
         }
 
         /* ----------------------------------------------------
@@ -453,23 +570,19 @@
 
         /* ----------------------------------------------------
            3. Build Character: Woojin (Matching User Photo!)
-              - Short neat bangs (일자 앞머리 뱅 헤어)
-              - Cute ears on sides (귀엽게 쫑긋한 귀)
-              - Bright smile & friendly eyes (눈매와 입꼬리 미소)
-              - White collared shirt with green trim (사진 속 단정한 카라 셔츠)
         ---------------------------------------------------- */
         const woojin = new THREE.Group();
         woojin.position.set(0, 1.5, 0);
         scene.add(woojin);
 
         // Materials
-        const skinColor = 0xffe2cd; // Warm, gentle Korean kid skin tone
+        const skinColor = 0xffe2cd;
         const skinMat = new THREE.MeshLambertMaterial({ color: skinColor });
-        const hairMat = new THREE.MeshLambertMaterial({ color: 0x1f1a17 }); // Glossy dark brownish-black hair
-        const shirtMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // White shirt
-        const greenTrimMat = new THREE.MeshLambertMaterial({ color: 0x15803d }); // School green collar from photo
-        const pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b }); // Navy pants
-        const shoeMat = new THREE.MeshLambertMaterial({ color: 0xffffff }); // Clean white sneakers
+        const hairMat = new THREE.MeshLambertMaterial({ color: 0x1f1a17 });
+        const shirtMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        const greenTrimMat = new THREE.MeshLambertMaterial({ color: 0x15803d });
+        const pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
+        const shoeMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
 
         // Dynamic Canvas Texture for Woojin's Smiling Face
         const faceCanvas = document.createElement('canvas');
@@ -477,11 +590,10 @@
         faceCanvas.height = 256;
         const ctx = faceCanvas.getContext('2d');
 
-        // Skin base
         ctx.fillStyle = '#ffe2cd';
         ctx.fillRect(0, 0, 256, 256);
 
-        // Eyebrows (neat and gentle)
+        // Eyebrows
         ctx.strokeStyle = '#1f1a17';
         ctx.lineWidth = 6;
         ctx.lineCap = 'round';
@@ -492,18 +604,12 @@
         ctx.moveTo(146, 102); ctx.quadraticCurveTo(171, 92, 196, 100);
         ctx.stroke();
 
-        // Eyes (bright, monolid/almond friendly eyes from photo)
+        // Eyes
         ctx.fillStyle = '#111827';
-        // Left eye
-        ctx.beginPath();
-        ctx.ellipse(85, 122, 16, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
-        // Right eye
-        ctx.beginPath();
-        ctx.ellipse(171, 122, 16, 12, 0, 0, Math.PI * 2);
-        ctx.fill();
+        ctx.beginPath(); ctx.ellipse(85, 122, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.ellipse(171, 122, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
 
-        // Eye sparkle highlights
+        // Eye highlights
         ctx.fillStyle = '#ffffff';
         ctx.beginPath(); ctx.arc(80, 118, 5, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(166, 118, 5, 0, Math.PI * 2); ctx.fill();
@@ -513,11 +619,11 @@
         ctx.beginPath(); ctx.arc(72, 142, 14, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(184, 142, 14, 0, Math.PI * 2); ctx.fill();
 
-        // Nose (cute small dot)
+        // Nose
         ctx.fillStyle = '#e8b89e';
         ctx.beginPath(); ctx.arc(128, 146, 4, 0, Math.PI * 2); ctx.fill();
 
-        // Smile (warm upward curved smile from photo!)
+        // Smile
         ctx.strokeStyle = '#991b1b';
         ctx.lineWidth = 5;
         ctx.beginPath();
@@ -527,38 +633,28 @@
         const faceTexture = new THREE.CanvasTexture(faceCanvas);
         const faceMat = new THREE.MeshLambertMaterial({ map: faceTexture });
 
-        // Head Box: Front face gets faceMat, other 5 sides get skinMat
-        const headMaterials = [
-            skinMat, // right
-            skinMat, // left
-            skinMat, // top
-            skinMat, // bottom
-            faceMat, // front (+Z)
-            skinMat  // back (-Z)
-        ];
+        const headMaterials = [skinMat, skinMat, skinMat, skinMat, faceMat, skinMat];
         const head = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.72, 0.72), headMaterials);
         head.position.y = 1.35;
         head.castShadow = true;
         woojin.add(head);
 
-        // Woojin's 3D Hair (Matching the clean bowl/bangs cut in the photo!)
+        // 3D Hair with Bangs
         const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.28, 0.76), hairMat);
         hairTop.position.set(0, 1.62, 0);
         hairTop.castShadow = true;
         woojin.add(hairTop);
 
-        // Bangs over forehead (neat, slightly layered bangs like in photo)
         const bangs = new THREE.Mesh(new THREE.BoxGeometry(0.74, 0.22, 0.14), hairMat);
         bangs.position.set(0, 1.54, 0.37);
         bangs.castShadow = true;
         woojin.add(bangs);
 
-        // Back and side hair
         const hairBack = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.45, 0.18), hairMat);
         hairBack.position.set(0, 1.42, -0.32);
         woojin.add(hairBack);
 
-        // Woojin's Cute Ears (from photo)
+        // 3D Ears
         const leftEar = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.22, 0.16), skinMat);
         leftEar.position.set(-0.41, 1.35, -0.02);
         woojin.add(leftEar);
@@ -567,13 +663,12 @@
         rightEar.position.set(0.41, 1.35, -0.02);
         woojin.add(rightEar);
 
-        // Body: White Shirt + Green Collar Trim from the photo!
+        // Body: White Shirt + Green Collar
         const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.88, 0.5), shirtMat);
         body.position.y = 0.65;
         body.castShadow = true;
         woojin.add(body);
 
-        // Green Collar V-Neck Trim on Shirt
         const collarLeft = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.35, 0.04), greenTrimMat);
         collarLeft.position.set(-0.16, 0.88, 0.26);
         collarLeft.rotation.z = -0.4;
@@ -584,12 +679,11 @@
         collarRight.rotation.z = 0.4;
         woojin.add(collarRight);
 
-        // Green pocket badge
         const badge = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.16, 0.02), greenTrimMat);
         badge.position.set(-0.24, 0.68, 0.26);
         woojin.add(badge);
 
-        // Arms (White shirt sleeves + skin hands)
+        // Arms
         const leftArmGroup = new THREE.Group();
         leftArmGroup.position.set(-0.54, 0.98, 0);
         const leftArmSleeve = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.52, 0.28), shirtMat);
@@ -612,7 +706,7 @@
         rightArmGroup.add(rightHand);
         woojin.add(rightArmGroup);
 
-        // Legs (Navy Pants + White Sneakers)
+        // Legs
         const leftLegGroup = new THREE.Group();
         leftLegGroup.position.set(-0.24, 0.2, 0);
         const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.75, 0.35), pantsMat);
@@ -635,7 +729,7 @@
         rightLegGroup.add(rightShoe);
         woojin.add(rightLegGroup);
 
-        // Shadow blob under Woojin
+        // Shadow blob
         const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 });
         const shadowMesh = new THREE.Mesh(new THREE.CircleGeometry(0.6, 24), shadowMat);
         shadowMesh.rotation.x = -Math.PI / 2;
@@ -643,7 +737,7 @@
         scene.add(shadowMesh);
 
         /* ----------------------------------------------------
-           4. Build the Obby (Obstacle Course Jump Map)
+           4. Build the Obby Platforms
         ---------------------------------------------------- */
         const platforms = [];
         const stars = [];
@@ -737,7 +831,6 @@
         }
 
         // ================= MAP GENERATION =================
-        // Start Platform
         createPlatform(0, 0, 0, 6, 1, 6, 0x38bdf8, true);
 
         // Zone 1: Rainbow Stepping Stones
@@ -765,7 +858,7 @@
         createCheckpoint(0, 3.2, 60, "체크포인트 2 통과!");
         createSpringPad(0, 4.0, 61);
 
-        // Zone 3: Sky Island Jump via Spring (Y drops onto 10.0!)
+        // Zone 3: Sky Island Jump via Spring
         createPlatform(0, 9.5, 76, 3, 0.6, 3, 0xec4899);
         createStar(0, 11.2, 76);
 
@@ -778,10 +871,10 @@
         createPlatform(0, 11.8, 100, 2.5, 0.6, 2.5, 0x10b981);
         createStar(0, 13.4, 100);
 
-        // Zone 4: Final Golden Winner Island with Trophy!
+        // Zone 4: Final Golden Winner Island
         const winIsland = createPlatform(0, 12.5, 114, 8, 1.2, 8, 0xfacc15);
 
-        // 3D Golden Trophy on Island
+        // 3D Golden Trophy
         const trophyGroup = new THREE.Group();
         const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
         const tBase = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.1, 0.4, 16), goldMat);
@@ -825,16 +918,32 @@
         }
         startTimer();
 
-        function showBanner(text) {
+        function showBanner(text, isTease = false) {
             const b = document.getElementById('banner');
             b.innerText = text;
+            if (isTease) {
+                b.classList.add('tease');
+            } else {
+                b.classList.remove('tease');
+            }
             b.classList.add('show');
             setTimeout(() => b.classList.remove('show'), 1600);
         }
 
+        // Teasing phrases on fall
+        const teasePhrases = [
+            "메롱~ 우진이 번지점프! 😜",
+            "어디 가니 우진아~ 🤣",
+            "와-와-와-와앙~ 다시 도전! 💨",
+            "으악! 발 헛디뎠다! 🤪",
+            "바람과 함께 사라진 우진이~ 🍃"
+        ];
+
         function respawn() {
-            playFallSound();
-            showBanner("앗! 다시 체크포인트로 돌아갑니다!");
+            playTeaseFallSound(); // 🤪 Play funny mocking music!
+            const randomTease = teasePhrases[Math.floor(Math.random() * teasePhrases.length)];
+            showBanner(randomTease, true);
+
             player.x = spawnPoint.x;
             player.y = spawnPoint.y + 1.0;
             player.z = spawnPoint.z;
@@ -906,7 +1015,6 @@
             joyVector.y = dy / maxR;
         }
 
-        // Jump Button
         function doJump() {
             initAudio();
             if (player.isGrounded && gameActive) {
@@ -918,7 +1026,11 @@
         jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doJump(); }, { passive: false });
         jumpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); doJump(); });
 
-        // Keyboard Controls (WASD / Arrows + Space)
+        // Anywhere touch enables BGM audio on mobile
+        window.addEventListener('touchstart', () => { initAudio(); }, { once: true });
+        window.addEventListener('click', () => { initAudio(); }, { once: true });
+
+        // Keyboard Controls
         const keys = {};
         window.addEventListener('keydown', (e) => {
             initAudio();
@@ -938,9 +1050,8 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // 1. Inputs (Joystick + Keyboard)
             let inputX = joyVector.x;
-            let inputZ = -joyVector.y; // Up is forward (Z+)
+            let inputZ = -joyVector.y;
 
             if (keys['KeyA'] || keys['ArrowLeft']) inputX -= 1;
             if (keys['KeyD'] || keys['ArrowRight']) inputX += 1;
@@ -953,12 +1064,10 @@
                 inputZ /= inputLen;
             }
 
-            // Movement along world coordinates
             if (gameActive) {
                 player.vx = inputX * player.speed;
                 player.vz = inputZ * player.speed;
 
-                // Player Rotation & Arm/Leg Animation
                 if (inputLen > 0.1) {
                     player.rotY = Math.atan2(inputX, inputZ);
                     woojin.rotation.y = player.rotY;
@@ -975,15 +1084,13 @@
                     rightLegGroup.rotation.x *= 0.8;
                 }
 
-                // Apply Gravity
                 player.vy -= player.gravity;
 
-                // Update Position
                 player.x += player.vx;
                 player.y += player.vy;
                 player.z += player.vz;
 
-                // Ground Collision against platforms
+                // Ground Collision
                 player.isGrounded = false;
                 for (const plat of platforms) {
                     const margin = 0.35;
@@ -1002,7 +1109,7 @@
                 for (const pad of springPads) {
                     const dist = Math.hypot(player.x - pad.x, player.z - pad.z);
                     if (dist < pad.width / 2 && Math.abs(player.y - pad.y) < 0.6) {
-                        player.vy = 0.44; // High Spring Jump!
+                        player.vy = 0.44;
                         player.isGrounded = false;
                         playSpringSound();
                         showBanner("🚀 슈퍼 점프 패드 발동!");
@@ -1015,7 +1122,7 @@
                     const dist = Math.hypot(player.x - cp.x, player.z - cp.z);
                     if (dist < 2.5 && !cp.activated) {
                         cp.activated = true;
-                        cp.flagMat.color.setHex(0x22c55e); // Turn Flag Green!
+                        cp.flagMat.color.setHex(0x22c55e);
                         spawnPoint = { x: cp.x, y: cp.y, z: cp.z };
                         playCheckpointSound();
                         showBanner(cp.name);
@@ -1038,7 +1145,7 @@
                     }
                 }
 
-                // Laser Hazard Rotation & Collision
+                // Laser Hazard
                 for (const h of hazards) {
                     h.mesh.rotation.y += h.speed;
                     const dx = player.x - h.centerX;
@@ -1055,22 +1162,17 @@
                     respawn();
                 }
 
-                // Goal Trophy Check (Win condition!)
+                // Goal Trophy Check
                 if (player.z >= 111 && player.y >= 12.0) {
                     winGame();
                 }
             }
 
-            // Sync 3D Mesh
             woojin.position.set(player.x, player.y, player.z);
             shadowMesh.position.set(player.x, player.y + 0.03, player.z);
-
-            // Rotate Trophy
             trophyGroup.rotation.y += 0.02;
 
-            /* ----------------------------------------------------
-               Camera: Top-Down Isometric (Downwards Angle)
-            ---------------------------------------------------- */
+            // Camera Top-Down Follow
             const camOffsetX = 0;
             const camOffsetY = 15;
             const camOffsetZ = -14;
@@ -1090,7 +1192,7 @@
         animate();
 
         /* ----------------------------------------------------
-           8. Victory & Share
+           8. Victory & Restart
         ---------------------------------------------------- */
         function winGame() {
             if (!gameActive) return;
