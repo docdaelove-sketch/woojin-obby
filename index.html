@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>우진이의 20단계 슈퍼 로블록스 점프 어드벤처</title>
+    <title>달려라 우진아 (Let's run with Mike)</title>
     <!-- Three.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -519,7 +519,7 @@
                 <img src="woojin.png" alt="우진이">
             </div>
             <div class="profile-info">
-                <span class="badge-tag">Lv.20 마스터 우진</span>
+                <span class="badge-tag">달려라 우진아</span>
                 <span>⭐ <span id="star-count">0</span> / 30</span>
             </div>
         </div>
@@ -557,7 +557,7 @@
     </div>
 
     <div id="banner"></div>
-    <div id="cutscene-title">👑 20단계 완전정복! 챔피언 우진! 👑</div>
+    <div id="cutscene-title">👑 달려라 우진아! 챔피언 등극! (Let's run with Mike) 👑</div>
 
     <!-- Victory & Record Registration Modal -->
     <div id="win-modal">
@@ -566,8 +566,8 @@
                 <img src="woojin.png" alt="우진이">
                 <div class="winner-crown">👑</div>
             </div>
-            <h2>20단계 완전 정복 대성공!</h2>
-            <p>10살 우진이와 함께 모든 몬스터와 레이저를 뚫고 전설의 챔피언 황금 트로피에 도달했습니다!</p>
+            <h2>달려라 우진아! 대성공! 🏆</h2>
+            <p>10살 우진이와 함께 모든 몬스터와 레이저를 뚫고 전설의 챔피언 황금 트로피에 도달했습니다! (Let's run with Mike!)</p>
             <div class="stats-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
                 <div class="stat-item">
                     <div class="stat-val" id="win-stars">30 / 30</div>
@@ -609,24 +609,28 @@
 
     <script>
         /* ----------------------------------------------------
-           1. Web Audio API Sounds & Upbeat BGM Sequencer
+           1. Audio System: Custom "달려라 우진아" BGM & Web Audio SFX
         ---------------------------------------------------- */
         let audioCtx = null;
         let soundEnabled = true;
-        let bgmGainNode = null;
-        let bgmStep = 0;
-        let bgmInterval = null;
+
+        // Custom BGM: "달려라 우진아 (Let's run with Mike)"
+        const bgmAudio = new Audio('bgm.mp3');
+        bgmAudio.loop = true;
+        bgmAudio.volume = 0.25; // 너무 시끄럽지 않도록 편안하고 적절한 BGM 볼륨 (25%)
+        let bgmStarted = false;
 
         function initAudio() {
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                bgmGainNode = audioCtx.createGain();
-                bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
-                bgmGainNode.connect(audioCtx.destination);
-                startBGM();
             }
             if (audioCtx.state === 'suspended') {
                 audioCtx.resume();
+            }
+            if (soundEnabled && !bgmStarted) {
+                bgmAudio.play().then(() => {
+                    bgmStarted = true;
+                }).catch(() => {});
             }
         }
 
@@ -647,57 +651,6 @@
                 osc.start();
                 osc.stop(audioCtx.currentTime + duration);
             } catch(e) {}
-        }
-
-        const bgmMelody = [
-            523, 0, 659, 783, 1046, 0, 783, 659,
-            880, 0, 783, 659, 587, 659, 587, 0,
-            523, 0, 659, 783, 880, 0, 1046, 0,
-            1174, 1046, 880, 783, 659, 587, 523, 0
-        ];
-        const bgmBass = [
-            261, 261, 329, 392, 220, 220, 329, 220,
-            174, 174, 261, 174, 196, 196, 293, 196,
-            261, 261, 329, 392, 220, 220, 329, 220,
-            174, 174, 196, 196, 261, 261, 392, 261
-        ];
-
-        function startBGM() {
-            if (bgmInterval) return;
-            bgmInterval = setInterval(() => {
-                if (!soundEnabled || !audioCtx) return;
-                const note = bgmMelody[bgmStep % bgmMelody.length];
-                const bass = bgmBass[bgmStep % bgmBass.length];
-                const now = audioCtx.currentTime;
-
-                if (note > 0) {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'triangle';
-                    osc.frequency.setValueAtTime(note, now);
-                    gain.gain.setValueAtTime(0.055, now);
-                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
-                    osc.connect(gain);
-                    gain.connect(bgmGainNode);
-                    osc.start(now);
-                    osc.stop(now + 0.15);
-                }
-
-                if (bass > 0 && bgmStep % 2 === 0) {
-                    const bOsc = audioCtx.createOscillator();
-                    const bGain = audioCtx.createGain();
-                    bOsc.type = 'sine';
-                    bOsc.frequency.setValueAtTime(bass, now);
-                    bGain.gain.setValueAtTime(0.075, now);
-                    bGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
-                    bOsc.connect(bGain);
-                    bGain.connect(bgmGainNode);
-                    bOsc.start(now);
-                    bOsc.stop(now + 0.23);
-                }
-
-                bgmStep++;
-            }, 145);
         }
 
         const playJumpSound = () => playTone(320, 'sine', 0.15, 640);
@@ -739,15 +692,14 @@
         };
 
         const playTeaseFallSound = () => {
-            if (!soundEnabled || !audioCtx) return;
-            if (bgmGainNode) {
-                bgmGainNode.gain.setValueAtTime(0.005, audioCtx.currentTime);
-                setTimeout(() => {
-                    if (bgmGainNode && soundEnabled) {
-                        bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
-                    }
-                }, 1600);
-            }
+            if (!soundEnabled) return;
+            // 떨어질 때 BGM 볼륨을 일시적으로 살짝 낮춰 약올리는 소리가 잘 들리도록 처리!
+            bgmAudio.volume = 0.06;
+            setTimeout(() => {
+                if (soundEnabled) bgmAudio.volume = 0.25;
+            }, 1600);
+
+            if (!audioCtx) return;
             const teaseNotes = [392, 370, 349];
             teaseNotes.forEach((f, i) => {
                 setTimeout(() => playTone(f, 'sawtooth', 0.22, f - 12, 0.22), i * 210);
@@ -775,10 +727,10 @@
             soundEnabled = !soundEnabled;
             if (soundEnabled) {
                 initAudio();
-                if (bgmGainNode) bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
+                bgmAudio.play().catch(() => {});
                 document.getElementById('sound-toggle').innerText = '🎵 ON';
             } else {
-                if (bgmGainNode && audioCtx) bgmGainNode.gain.setValueAtTime(0.0, audioCtx.currentTime);
+                bgmAudio.pause();
                 document.getElementById('sound-toggle').innerText = '🔇 OFF';
             }
         }
@@ -2307,7 +2259,7 @@
             const baseTimeStr = formatSec(gameTime);
 
             const penaltyNote = (missedStars === 0) ? "⭐ 퍼펙트 30개 올클리어 (페널티 0분)!" : `⚠️ 별 ${missedStars}개 누락 (+${missedStars}분 페널티)`;
-            const shareText = `🏆 10살 우진이의 20단계 슈퍼 로블록스 점프맵 완전 정복!\n⭐ 모은 황금별: [${starsCollected}/${totalStars}]개 (${penaltyNote})\n⏱️ 최종 랭킹 기록: [${finalTimeStr}] (기본: ${baseTimeStr})\n너 나 이길 수 있어? 지금 링크 눌러서 도전해봐!\n${window.location.href}`;
+            const shareText = `🏆 달려라 우진아 (Let's run with Mike) 20단계 완전 정복!\n⭐ 모은 황금별: [${starsCollected}/${totalStars}]개 (${penaltyNote})\n⏱️ 최종 랭킹 기록: [${finalTimeStr}] (기본: ${baseTimeStr})\n너 나 이길 수 있어? 지금 링크 눌러서 도전해봐!\n${window.location.href}`;
 
             if (navigator.clipboard) {
                 navigator.clipboard.writeText(shareText).then(() => {
