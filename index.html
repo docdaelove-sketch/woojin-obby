@@ -110,6 +110,36 @@
             cursor: pointer;
         }
 
+        /* Active Item Buff Badge Bar */
+        #buff-bar {
+            position: absolute;
+            top: 75px;
+            left: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            pointer-events: none;
+            z-index: 10;
+        }
+        .buff-pill {
+            background: rgba(0, 0, 0, 0.75);
+            border: 2px solid #fff;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            animation: pulseGlow 1s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            from { transform: scale(1); }
+            to { transform: scale(1.04); }
+        }
+
         /* Mobile Controls */
         #touch-controls {
             position: absolute;
@@ -176,7 +206,7 @@
         /* Checkpoint message & Tease message */
         #banner {
             position: absolute;
-            top: 30%;
+            top: 28%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             background: rgba(0, 0, 0, 0.88);
@@ -202,10 +232,38 @@
             border-color: #ff4757;
             animation: wobble 0.4s ease-in-out;
         }
+        #banner.item {
+            color: #38bdf8;
+            border-color: #38bdf8;
+        }
         @keyframes wobble {
             0%, 100% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
             25% { transform: translate(-50%, -50%) rotate(-6deg) scale(1.05); }
             75% { transform: translate(-50%, -50%) rotate(6deg) scale(1.05); }
+        }
+
+        /* Victory Title during Cutscene */
+        #cutscene-title {
+            position: absolute;
+            top: 15%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: #ffd700;
+            font-size: 26px;
+            font-weight: 900;
+            padding: 12px 30px;
+            border-radius: 30px;
+            border: 3px solid #ffd700;
+            display: none;
+            z-index: 60;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+            animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes bounceIn {
+            0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
+            100% { transform: translateX(-50%) scale(1); opacity: 1; }
         }
 
         /* Victory Modal */
@@ -215,7 +273,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.78);
+            background: rgba(0, 0, 0, 0.8);
             display: none;
             justify-content: center;
             align-items: center;
@@ -238,8 +296,8 @@
         }
         .winner-avatar-wrap {
             position: relative;
-            width: 88px;
-            height: 88px;
+            width: 92px;
+            height: 92px;
             margin: 0 auto 12px;
         }
         .winner-avatar-wrap img {
@@ -254,7 +312,7 @@
             position: absolute;
             top: -16px;
             right: -6px;
-            font-size: 32px;
+            font-size: 34px;
             animation: bounce 1s infinite alternate;
         }
         @keyframes bounce {
@@ -344,6 +402,9 @@
         </div>
     </div>
 
+    <!-- Active Item Buff Bar -->
+    <div id="buff-bar"></div>
+
     <div id="touch-controls">
         <div id="joystick-zone">
             <div id="joystick-thumb"></div>
@@ -355,6 +416,7 @@
     </div>
 
     <div id="banner"></div>
+    <div id="cutscene-title">👑 우진이 챔피언 등극! 👑</div>
 
     <div id="win-modal">
         <div class="modal-box">
@@ -480,6 +542,12 @@
             playTone(260, 'triangle', 0.45, 1100, 0.25);
             setTimeout(() => playTone(520, 'sine', 0.3, 1300, 0.2), 100);
         };
+        const playItemSound = () => {
+            [440, 554, 659, 880].forEach((f, i) => setTimeout(() => playTone(f, 'sine', 0.15, null, 0.22), i * 70));
+        };
+        const playShieldBlockSound = () => {
+            playTone(880, 'triangle', 0.25, 440, 0.3);
+        };
         const playCheckpointSound = () => { playTone(523, 'triangle', 0.1); setTimeout(() => playTone(659, 'triangle', 0.1), 100); setTimeout(() => playTone(783, 'triangle', 0.25), 200); };
         const playWinSound = () => {
             [523, 659, 783, 1046, 1318].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.4), i * 140));
@@ -564,7 +632,7 @@
         scene.add(dirLight);
 
         /* ----------------------------------------------------
-           3. Build Woojin Model (Photo-based!)
+           3. Build Woojin Model (Photo-based Smiling Hero!)
         ---------------------------------------------------- */
         const woojin = new THREE.Group();
         woojin.position.set(0, 1.5, 0);
@@ -604,17 +672,18 @@
         ctx.beginPath(); ctx.arc(80, 118, 5, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(166, 118, 5, 0, Math.PI * 2); ctx.fill();
 
-        ctx.fillStyle = 'rgba(255, 130, 130, 0.35)';
+        ctx.fillStyle = 'rgba(255, 130, 130, 0.4)';
         ctx.beginPath(); ctx.arc(72, 142, 14, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(184, 142, 14, 0, Math.PI * 2); ctx.fill();
 
         ctx.fillStyle = '#e8b89e';
         ctx.beginPath(); ctx.arc(128, 146, 4, 0, Math.PI * 2); ctx.fill();
 
-        ctx.strokeStyle = '#991b1b';
-        ctx.lineWidth = 5;
+        // Big Radiant Smile!
+        ctx.strokeStyle = '#b91c1c';
+        ctx.lineWidth = 6;
         ctx.beginPath();
-        ctx.arc(128, 160, 26, 0.2 * Math.PI, 0.8 * Math.PI);
+        ctx.arc(128, 156, 28, 0.18 * Math.PI, 0.82 * Math.PI);
         ctx.stroke();
 
         const faceTexture = new THREE.CanvasTexture(faceCanvas);
@@ -711,6 +780,22 @@
         rightLegGroup.add(rightShoe);
         woojin.add(rightLegGroup);
 
+        // Shield Bubble Visual around Woojin (Activated on shield pickup)
+        const shieldBubbleGeo = new THREE.SphereGeometry(1.3, 24, 24);
+        const shieldBubbleMat = new THREE.MeshStandardMaterial({
+            color: 0x38bdf8,
+            transparent: true,
+            opacity: 0.38,
+            roughness: 0.1,
+            metalness: 0.9,
+            wireframe: false
+        });
+        const shieldBubble = new THREE.Mesh(shieldBubbleGeo, shieldBubbleMat);
+        shieldBubble.position.y = 0.9;
+        shieldBubble.visible = false;
+        woojin.add(shieldBubble);
+
+        // Shadow blob
         const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 });
         const shadowMesh = new THREE.Mesh(new THREE.CircleGeometry(0.6, 24), shadowMat);
         shadowMesh.rotation.x = -Math.PI / 2;
@@ -718,13 +803,14 @@
         scene.add(shadowMesh);
 
         /* ----------------------------------------------------
-           4. Build the Obby Platforms (총 7단계 확장 & 난이도 완화!)
+           4. Build the Obby Platforms & Power-Up Items!
         ---------------------------------------------------- */
         const platforms = [];
         const stars = [];
         const hazards = [];
         const springPads = [];
         const checkpoints = [];
+        const powerItems = [];
 
         function createPlatform(x, y, z, w, h, d, color = 0x3b82f6) {
             const geo = new THREE.BoxGeometry(w, h, d);
@@ -760,6 +846,52 @@
             group.position.set(x, y, z);
             scene.add(group);
             stars.push({ group, x, y, z, collected: false });
+        }
+
+        // Power-Up Items: Speed Shoes ⚡, Invincible Shield 🛡️, Super Jump Spring 🦘
+        function createPowerItem(x, y, z, type) {
+            const group = new THREE.Group();
+            let color = 0xf59e0b;
+            let iconLabel = "⚡ 스피드 부스터";
+
+            if (type === 'speed') {
+                color = 0xfacc15;
+                const boltGeo = new THREE.ConeGeometry(0.35, 0.8, 5);
+                const boltMat = new THREE.MeshBasicMaterial({ color });
+                const m = new THREE.Mesh(boltGeo, boltMat);
+                m.rotation.x = Math.PI;
+                group.add(m);
+            } else if (type === 'shield') {
+                color = 0x38bdf8;
+                iconLabel = "🛡️ 무적 쉴드";
+                const sphereGeo = new THREE.SphereGeometry(0.42, 16, 16);
+                const sphereMat = new THREE.MeshStandardMaterial({ color, roughness: 0.2, metalness: 0.8 });
+                group.add(new THREE.Mesh(sphereGeo, sphereMat));
+            } else if (type === 'jump') {
+                color = 0x22c55e;
+                iconLabel = "🦘 슈퍼 점프력 UP";
+                const springGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.7, 8);
+                const springMat = new THREE.MeshStandardMaterial({ color, roughness: 0.3 });
+                group.add(new THREE.Mesh(springGeo, springMat));
+            }
+
+            // Glowing ring below item
+            const ringGeo = new THREE.TorusGeometry(0.55, 0.06, 8, 20);
+            const ringMat = new THREE.MeshBasicMaterial({ color });
+            const ring = new THREE.Mesh(ringGeo, ringMat);
+            ring.rotation.x = Math.PI / 2;
+            group.add(ring);
+
+            group.position.set(x, y, z);
+            scene.add(group);
+
+            powerItems.push({
+                group,
+                x, y, z,
+                type,
+                label: iconLabel,
+                collected: false
+            });
         }
 
         function createCheckpoint(x, y, z, name) {
@@ -808,15 +940,15 @@
             bar.rotation.z = Math.PI / 2;
             bar.position.set(x, y, z);
             scene.add(bar);
-            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.025 }); // 25% slower for fun
+            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.025 });
         }
 
-        // ================= 7 STAGES MAP GENERATION (난이도 완화 & 넓은 발판) =================
+        // ================= 7 STAGES MAP GENERATION =================
 
         // [시작 광장]
         createPlatform(0, 0, 0, 7, 1, 7, 0x38bdf8);
 
-        // [Stage 1] 🌈 무지개 웰컴 징검다리 (발판 크기를 3.0으로 넓히고 간격을 3.5로 좁혀 걷기 편함!)
+        // [Stage 1] 🌈 무지개 웰컴 징검다리
         const rainbowColors = [0xef4444, 0xf97316, 0xeab308, 0x22c55e, 0x06b6d4, 0x3b82f6, 0xa855f7];
         rainbowColors.forEach((col, i) => {
             const z = 6 + i * 3.6;
@@ -825,12 +957,14 @@
             if (i % 2 === 0) createStar(x, 1.8 + i * 0.3, z); // 별 1, 2, 3
         });
 
-        // [Checkpoint 1 섬]
+        // [Checkpoint 1 섬 & ⚡ 스피드 부스터 아이템]
         createPlatform(0, 2.4, 34, 6, 0.8, 6, 0x10b981);
         createCheckpoint(0, 2.4, 34, "🚩 [1구역 통과] 체크포인트 1 저장!");
         createStar(0, 4.0, 34); // 별 4
+        createPowerItem(1.5, 3.6, 34, 'speed'); // ⚡ 스피드 부스터 아이템!
 
-        // [Stage 2] 🔴 회전 레이저 함정 피하기 (여유로운 통로 & 살살 회전)
+        // [Stage 2] 🔴 회전 레이저 함정 피하기 (앞에 🛡️ 무적 쉴드 아이템 배치!)
+        createPowerItem(0, 3.8, 38.5, 'shield'); // 🛡️ 무적 쉴드 아이템!
         createPlatform(0, 2.4, 44, 5, 0.7, 10, 0x475569);
         createLaserBar(0, 3.5, 41, 4.4);
         createLaserBar(0, 3.5, 47, 4.4);
@@ -840,20 +974,21 @@
         createPlatform(0, 2.4, 55, 6, 0.8, 6, 0xf59e0b);
         createCheckpoint(0, 2.4, 55, "🚩 [2구역 통과] 체크포인트 2 저장!");
         createStar(0, 4.0, 55); // 별 6
-        createSpringPad(0, 3.2, 56.5); // 슈퍼 점프 발판
+        createSpringPad(0, 3.2, 56.5);
 
-        // [Stage 3] 🚀 슈퍼 점프 비행 & 대형 핑크 구름 섬 (착지대 거리를 가깝게 당기고 크기를 8x8로 초대형 확장!)
-        createPlatform(0, 5.0, 70, 8, 0.8, 8, 0xf43f5e); // 100% 착지 보장!
+        // [Stage 3] 🚀 대형 핑크 구름 섬 착지 (100% 안착!)
+        createPlatform(0, 5.0, 70, 8, 0.8, 8, 0xf43f5e);
         createStar(0, 6.8, 70); // 별 7
-        createCheckpoint(0, 5.0, 70, "🚩 [3구역 통과] 대형 핑크섬 착지 성공!");
+        createCheckpoint(0, 5.0, 70, "🚩 [3구역 통과] 핑크 구름섬 착지 성공!");
 
-        // [Stage 4] 🍭 캔디 파스텔 징검다리 (발판 크기 3.2x3.2)
+        // [Stage 4] 🍭 캔디 파스텔 징검다리 (중간에 🦘 슈퍼 점프 포션 배치!)
         const candyColors = [0xec4899, 0xa855f7, 0x6366f1, 0x3b82f6, 0x14b8a6];
         candyColors.forEach((col, i) => {
             const z = 78 + i * 3.8;
             const x = (i % 2 === 0) ? -1.2 : 1.2;
             createPlatform(x, 5.0 + i * 0.35, z, 3.2, 0.7, 3.2, col);
             if (i % 2 === 0) createStar(x, 6.8 + i * 0.35, z); // 별 8, 9, 10
+            if (i === 2) createPowerItem(x, 6.6 + i * 0.35, z, 'jump'); // 🦘 슈퍼 점프 아이템!
         });
 
         // [Checkpoint 4 섬]
@@ -861,12 +996,13 @@
         createCheckpoint(0, 6.8, 100, "🚩 [4구역 통과] 체크포인트 4 저장!");
         createStar(0, 8.4, 100); // 별 11
 
-        // [Stage 5] 💎 에메랄드 크리스탈 정글 존
+        // [Stage 5] 💎 에메랄드 크리스탈 정글 존 (중간에 ⚡ 스피드 부스터 추가!)
         createPlatform(-2.5, 7.4, 108, 3.4, 0.7, 3.4, 0x10b981);
         createStar(-2.5, 9.0, 108); // 별 12
 
         createPlatform(2.5, 8.0, 115, 3.4, 0.7, 3.4, 0x059669);
         createStar(2.5, 9.6, 115); // 별 13
+        createPowerItem(2.5, 9.2, 115, 'speed'); // ⚡ 번개 스피드 아이템!
 
         createPlatform(0, 8.6, 122, 4.0, 0.7, 4.0, 0x047857);
         createStar(0, 10.2, 122); // 별 14
@@ -875,8 +1011,9 @@
         createPlatform(0, 9.0, 131, 6, 0.8, 6, 0x8b5cf6);
         createCheckpoint(0, 9.0, 131, "🚩 [5구역 통과] 체크포인트 5 저장!");
         createStar(0, 10.6, 131); // 별 15
+        createPowerItem(0, 10.4, 131, 'shield'); // 최종 코스 대비 🛡️ 무적 쉴드!
 
-        // [Stage 6] 🌌 은하수 스타 브릿지 (황금 계단)
+        // [Stage 6] 🌌 은하수 스타 브릿지
         for (let i = 0; i < 4; i++) {
             const z = 139 + i * 4.0;
             createPlatform(0, 9.5 + i * 0.5, z, 4.2, 0.7, 3.2, 0x6366f1);
@@ -885,7 +1022,6 @@
         // [Stage 7] 🏆 최종 황금 트로피 궁전 섬 (초대형 우승 광장!)
         const winIsland = createPlatform(0, 12.0, 162, 10, 1.2, 10, 0xfacc15);
 
-        // 3D 대형 황금 트로피
         const trophyGroup = new THREE.Group();
         const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.85, roughness: 0.15 });
         const tBase = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.3, 0.5, 16), goldMat);
@@ -899,6 +1035,30 @@
         trophyGroup.position.set(0, 13.5, 162);
         scene.add(trophyGroup);
 
+        // Confetti Fireworks Particles Group for Victory
+        const confettiGroup = new THREE.Group();
+        scene.add(confettiGroup);
+        const confettiParticles = [];
+        const confettiColors = [0xff0055, 0x00ffcc, 0xffcc00, 0xffffff, 0x9900ff, 0x33ff33];
+
+        function spawnConfetti(x, y, z) {
+            for (let i = 0; i < 90; i++) {
+                const col = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                const geo = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+                const mat = new THREE.MeshBasicMaterial({ color: col });
+                const m = new THREE.Mesh(geo, mat);
+                m.position.set(x, y + 2, z);
+                confettiGroup.add(m);
+                confettiParticles.push({
+                    mesh: m,
+                    vx: (Math.random() - 0.5) * 0.45,
+                    vy: Math.random() * 0.5 + 0.25,
+                    vz: (Math.random() - 0.5) * 0.45,
+                    rotSpeed: Math.random() * 0.2
+                });
+            }
+        }
+
         /* ----------------------------------------------------
            5. Player Physics & Logic State
         ---------------------------------------------------- */
@@ -906,16 +1066,24 @@
         const player = {
             x: 0, y: 1.5, z: 0,
             vx: 0, vy: 0, vz: 0,
+            baseSpeed: 0.17,
             speed: 0.17,
+            baseJump: 0.28,
             jumpForce: 0.28,
             gravity: 0.013,
             isGrounded: true,
-            rotY: 0
+            rotY: 0,
+            shieldActive: false,
+            speedBuffTimer: 0,
+            jumpBuffTimer: 0
         };
 
         let starsCollected = 0;
         let gameTime = 0;
         let gameActive = true;
+        let isVictoryCutscene = false;
+        let cutsceneTimer = 0;
+        let orbitAngle = 0;
         let timerInterval = null;
 
         function startTimer() {
@@ -925,18 +1093,47 @@
                 const mins = String(Math.floor(gameTime / 60)).padStart(2, '0');
                 const secs = String(gameTime % 60).padStart(2, '0');
                 document.getElementById('timer-text').innerText = `${mins}:${secs}`;
+
+                // Update Buff Timers
+                updateBuffs();
             }, 1000);
         }
         startTimer();
 
-        function showBanner(text, isTease = false) {
+        function updateBuffs() {
+            let buffHtml = "";
+            if (player.speedBuffTimer > 0) {
+                player.speedBuffTimer--;
+                player.speed = player.baseSpeed * 1.55; // 55% Speed Boost!
+                buffHtml += `<div class="buff-pill" style="border-color:#facc15;">⚡ 스피드 UP (${player.speedBuffTimer}s)</div>`;
+            } else {
+                player.speed = player.baseSpeed;
+            }
+
+            if (player.jumpBuffTimer > 0) {
+                player.jumpBuffTimer--;
+                player.jumpForce = player.baseJump * 1.38; // 38% Jump Boost!
+                buffHtml += `<div class="buff-pill" style="border-color:#22c55e;">🦘 점프력 UP (${player.jumpBuffTimer}s)</div>`;
+            } else {
+                player.jumpForce = player.baseJump;
+            }
+
+            if (player.shieldActive) {
+                buffHtml += `<div class="buff-pill" style="border-color:#38bdf8;">🛡️ 무적 쉴드 보호 중!</div>`;
+                shieldBubble.visible = true;
+            } else {
+                shieldBubble.visible = false;
+            }
+
+            document.getElementById('buff-bar').innerHTML = buffHtml;
+        }
+
+        function showBanner(text, type = "normal") {
             const b = document.getElementById('banner');
             b.innerText = text;
-            if (isTease) {
-                b.classList.add('tease');
-            } else {
-                b.classList.remove('tease');
-            }
+            b.className = "";
+            if (type === "tease") b.classList.add('tease');
+            if (type === "item") b.classList.add('item');
             b.classList.add('show');
             setTimeout(() => b.classList.remove('show'), 1600);
         }
@@ -952,7 +1149,7 @@
         function respawn() {
             playTeaseFallSound();
             const randomTease = teasePhrases[Math.floor(Math.random() * teasePhrases.length)];
-            showBanner(randomTease, true);
+            showBanner(randomTease, "tease");
 
             player.x = spawnPoint.x;
             player.y = spawnPoint.y + 1.0;
@@ -1058,7 +1255,50 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // Left/Right control fixed
+            // ================= CINEMATIC VICTORY CAMERA ORBIT =================
+            if (isVictoryCutscene) {
+                cutsceneTimer += 0.016;
+                orbitAngle += 0.022; // 360-degree smooth orbit!
+
+                // Woojin Victory Cheering Pose (Face front, arms waving high!)
+                woojin.rotation.y = 0; // Look directly towards front!
+                leftArmGroup.rotation.x = 2.8 + Math.sin(cutsceneTimer * 8) * 0.25;
+                rightArmGroup.rotation.x = 2.8 - Math.sin(cutsceneTimer * 8) * 0.25;
+                leftLegGroup.rotation.x = Math.sin(cutsceneTimer * 10) * 0.15;
+                rightLegGroup.rotation.x = -Math.sin(cutsceneTimer * 10) * 0.15;
+
+                // Close-Up 360 Degree Camera Orbiting Woojin's Smiling Face
+                const orbitRadius = 3.6;
+                camera.position.x = woojin.position.x + Math.sin(orbitAngle) * orbitRadius;
+                camera.position.z = woojin.position.z + Math.cos(orbitAngle) * orbitRadius;
+                camera.position.y = woojin.position.y + 1.25; // Eye-level close up!
+                camera.lookAt(woojin.position.x, woojin.position.y + 1.35, woojin.position.z);
+
+                // Update Confetti Particles
+                for (const p of confettiParticles) {
+                    p.mesh.position.x += p.vx;
+                    p.mesh.position.y += p.vy;
+                    p.mesh.position.z += p.vz;
+                    p.vy -= 0.007; // Gravity
+                    p.mesh.rotation.x += p.rotSpeed;
+                    p.mesh.rotation.y += p.rotSpeed;
+                }
+
+                trophyGroup.rotation.y += 0.03;
+
+                // After 3.6 seconds of beautiful 360 cinematic, show final results modal!
+                if (cutsceneTimer > 3.6 && document.getElementById('win-modal').style.display !== 'flex') {
+                    document.getElementById('cutscene-title').style.display = 'none';
+                    document.getElementById('win-stars').innerText = starsCollected;
+                    document.getElementById('win-time').innerText = document.getElementById('timer-text').innerText;
+                    document.getElementById('win-modal').style.display = 'flex';
+                }
+
+                renderer.render(scene, camera);
+                return;
+            }
+
+            // Normal Gameplay Movement
             let inputX = -joyVector.x;
             let inputZ = -joyVector.y;
 
@@ -1075,11 +1315,10 @@
 
             if (gameActive) {
                 player.vx = inputX * player.speed;
-                // If not in special spring forward-boost state, apply normal input vz
                 if (Math.abs(player.vz) < 0.25 || player.isGrounded) {
                     player.vz = inputZ * player.speed;
                 } else {
-                    player.vz *= 0.985; // Smooth deceleration after spring launch
+                    player.vz *= 0.985;
                 }
 
                 if (inputLen > 0.1) {
@@ -1113,19 +1352,19 @@
                         if (player.y <= plat.topY + 0.15 && player.y >= plat.topY - 0.7 && player.vy <= 0) {
                             player.y = plat.topY;
                             player.vy = 0;
-                            player.vz = 0; // Stop spring momentum upon landing
+                            player.vz = 0;
                             player.isGrounded = true;
                             break;
                         }
                     }
                 }
 
-                // 🚀 Super Spring Pad Check (점프력 상승 + 앞으로 시원하게 부스트 발사!)
+                // Super Spring Pad Check
                 for (const pad of springPads) {
                     const dist = Math.hypot(player.x - pad.x, player.z - pad.z);
                     if (dist < pad.width / 2 && Math.abs(player.y - pad.y) < 0.7) {
-                        player.vy = 0.46; // High airtime
-                        player.vz = 0.36; // Powerful forward flight straight to Pink Island!
+                        player.vy = 0.46;
+                        player.vz = 0.36;
                         player.isGrounded = false;
                         playSpringSound();
                         showBanner("🚀 슈퍼 점프! 핑크섬으로 슝~");
@@ -1161,14 +1400,48 @@
                     }
                 }
 
-                // Laser Hazard
+                // Power-Up Items Collect Check!
+                for (const itm of powerItems) {
+                    if (!itm.collected) {
+                        itm.group.rotation.y += 0.05;
+                        itm.group.position.y = itm.y + Math.sin(Date.now() * 0.005) * 0.15; // Hovering!
+                        const dist = Math.hypot(player.x - itm.x, player.y - itm.y, player.z - itm.z);
+                        if (dist < 1.5) {
+                            itm.collected = true;
+                            scene.remove(itm.group);
+                            playItemSound();
+
+                            if (itm.type === 'speed') {
+                                player.speedBuffTimer = 12; // 12 seconds
+                                showBanner("⚡ 스피드 부스터 획득! (12초)", "item");
+                            } else if (itm.type === 'shield') {
+                                player.shieldActive = true;
+                                showBanner("🛡️ 무적 쉴드 장착! (1회 보호)", "item");
+                            } else if (itm.type === 'jump') {
+                                player.jumpBuffTimer = 12; // 12 seconds
+                                showBanner("🦘 슈퍼 점프력 UP! (12초)", "item");
+                            }
+                            updateBuffs();
+                        }
+                    }
+                }
+
+                // Laser Hazard Check (Shield Protection Support!)
                 for (const h of hazards) {
                     h.mesh.rotation.y += h.speed;
                     const dx = player.x - h.centerX;
                     const dz = player.z - h.z;
                     const distToCenter = Math.hypot(dx, dz);
                     if (distToCenter < h.length / 2 && Math.abs(player.y - h.y) < 0.75) {
-                        respawn();
+                        if (player.shieldActive) {
+                            // 🛡️ Shield blocks hazard!
+                            player.shieldActive = false;
+                            updateBuffs();
+                            playShieldBlockSound();
+                            showBanner("🛡️ 쉴드가 레이저를 막아냈습니다!");
+                        } else {
+                            respawn();
+                        }
                         break;
                     }
                 }
@@ -1178,9 +1451,9 @@
                     respawn();
                 }
 
-                // Goal Trophy Check (최종 7구역 황금 트로피 도착)
+                // Goal Trophy Check (Start Victory Cutscene!)
                 if (player.z >= 158 && player.y >= 11.0) {
-                    winGame();
+                    startVictoryCutscene();
                 }
             }
 
@@ -1188,7 +1461,7 @@
             shadowMesh.position.set(player.x, player.y + 0.03, player.z);
             trophyGroup.rotation.y += 0.02;
 
-            // Camera Top-Down Follow
+            // Normal Camera Follow
             const camOffsetX = 0;
             const camOffsetY = 15;
             const camOffsetZ = -14;
@@ -1208,21 +1481,54 @@
         animate();
 
         /* ----------------------------------------------------
-           8. Victory & Restart
+           8. Victory Cutscene & Restart
         ---------------------------------------------------- */
-        function winGame() {
+        function startVictoryCutscene() {
             if (!gameActive) return;
             gameActive = false;
             clearInterval(timerInterval);
+            isVictoryCutscene = true;
+            cutsceneTimer = 0;
+            orbitAngle = 0;
+
+            // Play grand victory fanfare
             playWinSound();
 
-            document.getElementById('win-stars').innerText = starsCollected;
-            document.getElementById('win-time').innerText = document.getElementById('timer-text').innerText;
-            document.getElementById('win-modal').style.display = 'flex';
+            // Spawn Confetti fireworks around Woojin!
+            spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z);
+            setTimeout(() => spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z), 1200);
+
+            // Display Celebration Title
+            document.getElementById('cutscene-title').style.display = 'block';
+            document.getElementById('touch-controls').style.display = 'none';
         }
 
         function restartGame() {
             document.getElementById('win-modal').style.display = 'none';
+            document.getElementById('cutscene-title').style.display = 'none';
+            document.getElementById('touch-controls').style.display = 'flex';
+            isVictoryCutscene = false;
+
+            // Clean up confetti
+            while (confettiGroup.children.length > 0) {
+                confettiGroup.remove(confettiGroup.children[0]);
+            }
+            confettiParticles.length = 0;
+
+            // Reset player and powerups
+            player.shieldActive = false;
+            player.speedBuffTimer = 0;
+            player.jumpBuffTimer = 0;
+            updateBuffs();
+
+            // Reset items
+            for (const itm of powerItems) {
+                if (itm.collected) {
+                    itm.collected = false;
+                    scene.add(itm.group);
+                }
+            }
+
             spawnPoint = { x: 0, y: 1.5, z: 0 };
             starsCollected = 0;
             gameTime = 0;
