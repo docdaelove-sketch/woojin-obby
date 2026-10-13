@@ -333,7 +333,7 @@
             </div>
             <div class="profile-info">
                 <span class="badge-tag">Lv.10 우진</span>
-                <span>⭐ <span id="star-count">0</span> / 10</span>
+                <span>⭐ <span id="star-count">0</span> / 15</span>
             </div>
         </div>
         <div style="display:flex; gap:8px;">
@@ -363,10 +363,10 @@
                 <div class="winner-crown">👑</div>
             </div>
             <h2>우진이 탈출 대성공!</h2>
-            <p>10살 우진이가 모든 점프맵 장애물을 뚫고 황금 트로피를 차지했습니다!</p>
+            <p>10살 우진이가 총 7단계 장애물 코스를 완벽 클리어하고 전설의 황금 트로피를 차지했습니다!</p>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-val" id="win-stars">10</div>
+                    <div class="stat-val" id="win-stars">15</div>
                     <div class="stat-lbl">모은 황금별</div>
                 </div>
                 <div class="stat-item">
@@ -395,7 +395,7 @@
             if (!audioCtx) {
                 audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 bgmGainNode = audioCtx.createGain();
-                bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime); // Gentle BGM volume
+                bgmGainNode.gain.setValueAtTime(0.045, audioCtx.currentTime);
                 bgmGainNode.connect(audioCtx.destination);
                 startBGM();
             }
@@ -423,7 +423,6 @@
             } catch(e) {}
         }
 
-        // Bouncy Cheerful Roblox-style Chiptune BGM Loop
         const bgmMelody = [
             523, 0, 659, 783, 1046, 0, 783, 659,
             880, 0, 783, 659, 587, 659, 587, 0,
@@ -445,7 +444,6 @@
                 const bass = bgmBass[bgmStep % bgmBass.length];
                 const now = audioCtx.currentTime;
 
-                // Melody Note
                 if (note > 0) {
                     const osc = audioCtx.createOscillator();
                     const gain = audioCtx.createGain();
@@ -459,7 +457,6 @@
                     osc.stop(now + 0.15);
                 }
 
-                // Bouncy Bass Note
                 if (bass > 0 && bgmStep % 2 === 0) {
                     const bOsc = audioCtx.createOscillator();
                     const bGain = audioCtx.createGain();
@@ -474,22 +471,23 @@
                 }
 
                 bgmStep++;
-            }, 145); // ~130 BPM Upbeat Tempo
+            }, 145);
         }
 
         const playJumpSound = () => playTone(320, 'sine', 0.15, 640);
         const playCoinSound = () => { playTone(987, 'sine', 0.08); setTimeout(() => playTone(1318, 'sine', 0.18), 70); };
-        const playSpringSound = () => playTone(250, 'triangle', 0.35, 900);
+        const playSpringSound = () => {
+            playTone(260, 'triangle', 0.45, 1100, 0.25);
+            setTimeout(() => playTone(520, 'sine', 0.3, 1300, 0.2), 100);
+        };
         const playCheckpointSound = () => { playTone(523, 'triangle', 0.1); setTimeout(() => playTone(659, 'triangle', 0.1), 100); setTimeout(() => playTone(783, 'triangle', 0.25), 200); };
         const playWinSound = () => {
-            [523, 659, 783, 1046].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.35), i * 140));
+            [523, 659, 783, 1046, 1318].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.4), i * 140));
         };
 
-        // 🤪 Comical Teasing / Mocking Fall Sound ("와-와-와-와앙~ 삐융- 메롱!")
         const playTeaseFallSound = () => {
             if (!soundEnabled || !audioCtx) return;
 
-            // Duck BGM during the tease
             if (bgmGainNode) {
                 bgmGainNode.gain.setValueAtTime(0.005, audioCtx.currentTime);
                 setTimeout(() => {
@@ -499,13 +497,11 @@
                 }, 1600);
             }
 
-            // Descending mocking trombone: 3 comical notes
-            const teaseNotes = [392, 370, 349]; // G4 -> F#4 -> F4
+            const teaseNotes = [392, 370, 349];
             teaseNotes.forEach((f, i) => {
                 setTimeout(() => playTone(f, 'sawtooth', 0.22, f - 12, 0.22), i * 210);
             });
 
-            // Final long comical slide down with vibrato ("와-아-앙~")
             setTimeout(() => {
                 if (!soundEnabled || !audioCtx) return;
                 try {
@@ -513,8 +509,8 @@
                     const gain = audioCtx.createGain();
                     osc.type = 'sawtooth';
                     const now = audioCtx.currentTime;
-                    osc.frequency.setValueAtTime(330, now); // E4
-                    osc.frequency.linearRampToValueAtTime(110, now + 0.85); // Big comical slide down!
+                    osc.frequency.setValueAtTime(330, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.85);
                     gain.gain.setValueAtTime(0.24, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
                     osc.connect(gain);
@@ -538,12 +534,12 @@
         }
 
         /* ----------------------------------------------------
-           2. 3D Scene, Camera (Top-Down Isometric), Renderer
+           2. 3D Scene, Camera, Renderer
         ---------------------------------------------------- */
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x70c5ff);
-        scene.fog = new THREE.FogExp2(0x70c5ff, 0.015);
+        scene.fog = new THREE.FogExp2(0x70c5ff, 0.012);
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -553,7 +549,6 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
 
-        // Lighting
         const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.9);
         scene.add(hemiLight);
 
@@ -562,20 +557,19 @@
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = 1024;
         dirLight.shadow.mapSize.height = 1024;
-        dirLight.shadow.camera.left = -30;
-        dirLight.shadow.camera.right = 30;
-        dirLight.shadow.camera.top = 30;
-        dirLight.shadow.camera.bottom = -30;
+        dirLight.shadow.camera.left = -40;
+        dirLight.shadow.camera.right = 40;
+        dirLight.shadow.camera.top = 40;
+        dirLight.shadow.camera.bottom = -40;
         scene.add(dirLight);
 
         /* ----------------------------------------------------
-           3. Build Character: Woojin (Matching User Photo!)
+           3. Build Woojin Model (Photo-based!)
         ---------------------------------------------------- */
         const woojin = new THREE.Group();
         woojin.position.set(0, 1.5, 0);
         scene.add(woojin);
 
-        // Materials
         const skinColor = 0xffe2cd;
         const skinMat = new THREE.MeshLambertMaterial({ color: skinColor });
         const hairMat = new THREE.MeshLambertMaterial({ color: 0x1f1a17 });
@@ -584,7 +578,6 @@
         const pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
         const shoeMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
 
-        // Dynamic Canvas Texture for Woojin's Smiling Face
         const faceCanvas = document.createElement('canvas');
         faceCanvas.width = 256;
         faceCanvas.height = 256;
@@ -593,7 +586,6 @@
         ctx.fillStyle = '#ffe2cd';
         ctx.fillRect(0, 0, 256, 256);
 
-        // Eyebrows
         ctx.strokeStyle = '#1f1a17';
         ctx.lineWidth = 6;
         ctx.lineCap = 'round';
@@ -604,26 +596,21 @@
         ctx.moveTo(146, 102); ctx.quadraticCurveTo(171, 92, 196, 100);
         ctx.stroke();
 
-        // Eyes
         ctx.fillStyle = '#111827';
         ctx.beginPath(); ctx.ellipse(85, 122, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.ellipse(171, 122, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
 
-        // Eye highlights
         ctx.fillStyle = '#ffffff';
         ctx.beginPath(); ctx.arc(80, 118, 5, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(166, 118, 5, 0, Math.PI * 2); ctx.fill();
 
-        // Rosy cheeks
         ctx.fillStyle = 'rgba(255, 130, 130, 0.35)';
         ctx.beginPath(); ctx.arc(72, 142, 14, 0, Math.PI * 2); ctx.fill();
         ctx.beginPath(); ctx.arc(184, 142, 14, 0, Math.PI * 2); ctx.fill();
 
-        // Nose
         ctx.fillStyle = '#e8b89e';
         ctx.beginPath(); ctx.arc(128, 146, 4, 0, Math.PI * 2); ctx.fill();
 
-        // Smile
         ctx.strokeStyle = '#991b1b';
         ctx.lineWidth = 5;
         ctx.beginPath();
@@ -639,7 +626,6 @@
         head.castShadow = true;
         woojin.add(head);
 
-        // 3D Hair with Bangs
         const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.28, 0.76), hairMat);
         hairTop.position.set(0, 1.62, 0);
         hairTop.castShadow = true;
@@ -654,7 +640,6 @@
         hairBack.position.set(0, 1.42, -0.32);
         woojin.add(hairBack);
 
-        // 3D Ears
         const leftEar = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.22, 0.16), skinMat);
         leftEar.position.set(-0.41, 1.35, -0.02);
         woojin.add(leftEar);
@@ -663,7 +648,6 @@
         rightEar.position.set(0.41, 1.35, -0.02);
         woojin.add(rightEar);
 
-        // Body: White Shirt + Green Collar
         const body = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.88, 0.5), shirtMat);
         body.position.y = 0.65;
         body.castShadow = true;
@@ -683,7 +667,6 @@
         badge.position.set(-0.24, 0.68, 0.26);
         woojin.add(badge);
 
-        // Arms
         const leftArmGroup = new THREE.Group();
         leftArmGroup.position.set(-0.54, 0.98, 0);
         const leftArmSleeve = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.52, 0.28), shirtMat);
@@ -706,7 +689,6 @@
         rightArmGroup.add(rightHand);
         woojin.add(rightArmGroup);
 
-        // Legs
         const leftLegGroup = new THREE.Group();
         leftLegGroup.position.set(-0.24, 0.2, 0);
         const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.75, 0.35), pantsMat);
@@ -729,7 +711,6 @@
         rightLegGroup.add(rightShoe);
         woojin.add(rightLegGroup);
 
-        // Shadow blob
         const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 });
         const shadowMesh = new THREE.Mesh(new THREE.CircleGeometry(0.6, 24), shadowMat);
         shadowMesh.rotation.x = -Math.PI / 2;
@@ -737,7 +718,7 @@
         scene.add(shadowMesh);
 
         /* ----------------------------------------------------
-           4. Build the Obby Platforms
+           4. Build the Obby Platforms (총 7단계 확장 & 난이도 완화!)
         ---------------------------------------------------- */
         const platforms = [];
         const stars = [];
@@ -745,7 +726,7 @@
         const springPads = [];
         const checkpoints = [];
 
-        function createPlatform(x, y, z, w, h, d, color = 0x3b82f6, isStart = false) {
+        function createPlatform(x, y, z, w, h, d, color = 0x3b82f6) {
             const geo = new THREE.BoxGeometry(w, h, d);
             const mat = new THREE.MeshLambertMaterial({ color: color });
             const mesh = new THREE.Mesh(geo, mat);
@@ -769,7 +750,7 @@
         function createStar(x, y, z) {
             const group = new THREE.Group();
             const starMat = new THREE.MeshBasicMaterial({ color: 0xffd700 });
-            const geo1 = new THREE.BoxGeometry(0.45, 0.45, 0.45);
+            const geo1 = new THREE.BoxGeometry(0.5, 0.5, 0.5);
             const m1 = new THREE.Mesh(geo1, starMat);
             group.add(m1);
             const m2 = new THREE.Mesh(geo1, starMat);
@@ -782,16 +763,16 @@
         }
 
         function createCheckpoint(x, y, z, name) {
-            const poleGeo = new THREE.CylinderGeometry(0.06, 0.06, 2.5);
+            const poleGeo = new THREE.CylinderGeometry(0.08, 0.08, 2.8);
             const poleMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
             const pole = new THREE.Mesh(poleGeo, poleMat);
-            pole.position.set(x - 1.2, y + 1.25, z);
+            pole.position.set(x - 1.5, y + 1.4, z);
             scene.add(pole);
 
-            const flagGeo = new THREE.BoxGeometry(0.8, 0.5, 0.05);
+            const flagGeo = new THREE.BoxGeometry(0.9, 0.55, 0.05);
             const flagMat = new THREE.MeshLambertMaterial({ color: 0xff4757 });
             const flag = new THREE.Mesh(flagGeo, flagMat);
-            flag.position.set(x - 0.8, y + 2.1, z);
+            flag.position.set(x - 1.05, y + 2.3, z);
             scene.add(flag);
 
             checkpoints.push({
@@ -804,20 +785,20 @@
         }
 
         function createSpringPad(x, y, z) {
-            const padGeo = new THREE.BoxGeometry(1.6, 0.25, 1.6);
+            const padGeo = new THREE.BoxGeometry(2.4, 0.35, 2.4);
             const padMat = new THREE.MeshLambertMaterial({ color: 0x10b981 });
             const pad = new THREE.Mesh(padGeo, padMat);
-            pad.position.set(x, y + 0.12, z);
+            pad.position.set(x, y + 0.17, z);
             scene.add(pad);
 
-            const arrowGeo = new THREE.ConeGeometry(0.35, 0.4, 4);
+            const arrowGeo = new THREE.ConeGeometry(0.5, 0.6, 4);
             const arrowMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
             const arrow = new THREE.Mesh(arrowGeo, arrowMat);
-            arrow.position.set(x, y + 0.35, z);
+            arrow.position.set(x, y + 0.55, z);
             arrow.rotation.y = Math.PI / 4;
             scene.add(arrow);
 
-            springPads.push({ x, y, z, width: 1.6 });
+            springPads.push({ x, y, z, width: 2.4 });
         }
 
         function createLaserBar(x, y, z, length) {
@@ -827,65 +808,95 @@
             bar.rotation.z = Math.PI / 2;
             bar.position.set(x, y, z);
             scene.add(bar);
-            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.04 });
+            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.025 }); // 25% slower for fun
         }
 
-        // ================= MAP GENERATION =================
-        createPlatform(0, 0, 0, 6, 1, 6, 0x38bdf8, true);
+        // ================= 7 STAGES MAP GENERATION (난이도 완화 & 넓은 발판) =================
 
-        // Zone 1: Rainbow Stepping Stones
+        // [시작 광장]
+        createPlatform(0, 0, 0, 7, 1, 7, 0x38bdf8);
+
+        // [Stage 1] 🌈 무지개 웰컴 징검다리 (발판 크기를 3.0으로 넓히고 간격을 3.5로 좁혀 걷기 편함!)
         const rainbowColors = [0xef4444, 0xf97316, 0xeab308, 0x22c55e, 0x06b6d4, 0x3b82f6, 0xa855f7];
         rainbowColors.forEach((col, i) => {
-            const z = 6 + i * 4.2;
-            const x = (i % 2 === 0) ? -1.5 : 1.5;
-            createPlatform(x, 0 + i * 0.4, z, 2.2, 0.6, 2.2, col);
-            if (i % 2 === 0) createStar(x, 1.8 + i * 0.4, z);
+            const z = 6 + i * 3.6;
+            const x = (i % 2 === 0) ? -1.0 : 1.0;
+            createPlatform(x, 0 + i * 0.3, z, 3.2, 0.7, 3.2, col);
+            if (i % 2 === 0) createStar(x, 1.8 + i * 0.3, z); // 별 1, 2, 3
         });
 
-        // Checkpoint 1 Island
-        createPlatform(0, 3.2, 38, 5, 0.8, 5, 0x10b981);
-        createCheckpoint(0, 3.2, 38, "체크포인트 1 통과!");
-        createStar(0, 4.6, 38);
+        // [Checkpoint 1 섬]
+        createPlatform(0, 2.4, 34, 6, 0.8, 6, 0x10b981);
+        createCheckpoint(0, 2.4, 34, "🚩 [1구역 통과] 체크포인트 1 저장!");
+        createStar(0, 4.0, 34); // 별 4
 
-        // Zone 2: Spinning Red Laser Obstacle Beam
-        createPlatform(0, 3.2, 48, 4, 0.6, 12, 0x475569);
-        createLaserBar(0, 4.2, 45, 3.6);
-        createLaserBar(0, 4.2, 51, 3.6);
-        createStar(0, 4.8, 48);
+        // [Stage 2] 🔴 회전 레이저 함정 피하기 (여유로운 통로 & 살살 회전)
+        createPlatform(0, 2.4, 44, 5, 0.7, 10, 0x475569);
+        createLaserBar(0, 3.5, 41, 4.4);
+        createLaserBar(0, 3.5, 47, 4.4);
+        createStar(0, 4.2, 44); // 별 5
 
-        // Checkpoint 2 Island + Super Jump Spring Pad
-        createPlatform(0, 3.2, 60, 5, 0.8, 5, 0xf59e0b);
-        createCheckpoint(0, 3.2, 60, "체크포인트 2 통과!");
-        createSpringPad(0, 4.0, 61);
+        // [Checkpoint 2 섬 & 슈퍼 점프대]
+        createPlatform(0, 2.4, 55, 6, 0.8, 6, 0xf59e0b);
+        createCheckpoint(0, 2.4, 55, "🚩 [2구역 통과] 체크포인트 2 저장!");
+        createStar(0, 4.0, 55); // 별 6
+        createSpringPad(0, 3.2, 56.5); // 슈퍼 점프 발판
 
-        // Zone 3: Sky Island Jump via Spring
-        createPlatform(0, 9.5, 76, 3, 0.6, 3, 0xec4899);
-        createStar(0, 11.2, 76);
+        // [Stage 3] 🚀 슈퍼 점프 비행 & 대형 핑크 구름 섬 (착지대 거리를 가깝게 당기고 크기를 8x8로 초대형 확장!)
+        createPlatform(0, 5.0, 70, 8, 0.8, 8, 0xf43f5e); // 100% 착지 보장!
+        createStar(0, 6.8, 70); // 별 7
+        createCheckpoint(0, 5.0, 70, "🚩 [3구역 통과] 대형 핑크섬 착지 성공!");
 
-        createPlatform(-3, 10.2, 84, 2.4, 0.6, 2.4, 0x8b5cf6);
-        createStar(-3, 11.8, 84);
+        // [Stage 4] 🍭 캔디 파스텔 징검다리 (발판 크기 3.2x3.2)
+        const candyColors = [0xec4899, 0xa855f7, 0x6366f1, 0x3b82f6, 0x14b8a6];
+        candyColors.forEach((col, i) => {
+            const z = 78 + i * 3.8;
+            const x = (i % 2 === 0) ? -1.2 : 1.2;
+            createPlatform(x, 5.0 + i * 0.35, z, 3.2, 0.7, 3.2, col);
+            if (i % 2 === 0) createStar(x, 6.8 + i * 0.35, z); // 별 8, 9, 10
+        });
 
-        createPlatform(3, 11.0, 92, 2.4, 0.6, 2.4, 0x06b6d4);
-        createStar(3, 12.6, 92);
+        // [Checkpoint 4 섬]
+        createPlatform(0, 6.8, 100, 6, 0.8, 6, 0x06b6d4);
+        createCheckpoint(0, 6.8, 100, "🚩 [4구역 통과] 체크포인트 4 저장!");
+        createStar(0, 8.4, 100); // 별 11
 
-        createPlatform(0, 11.8, 100, 2.5, 0.6, 2.5, 0x10b981);
-        createStar(0, 13.4, 100);
+        // [Stage 5] 💎 에메랄드 크리스탈 정글 존
+        createPlatform(-2.5, 7.4, 108, 3.4, 0.7, 3.4, 0x10b981);
+        createStar(-2.5, 9.0, 108); // 별 12
 
-        // Zone 4: Final Golden Winner Island
-        const winIsland = createPlatform(0, 12.5, 114, 8, 1.2, 8, 0xfacc15);
+        createPlatform(2.5, 8.0, 115, 3.4, 0.7, 3.4, 0x059669);
+        createStar(2.5, 9.6, 115); // 별 13
 
-        // 3D Golden Trophy
+        createPlatform(0, 8.6, 122, 4.0, 0.7, 4.0, 0x047857);
+        createStar(0, 10.2, 122); // 별 14
+
+        // [Checkpoint 5 섬]
+        createPlatform(0, 9.0, 131, 6, 0.8, 6, 0x8b5cf6);
+        createCheckpoint(0, 9.0, 131, "🚩 [5구역 통과] 체크포인트 5 저장!");
+        createStar(0, 10.6, 131); // 별 15
+
+        // [Stage 6] 🌌 은하수 스타 브릿지 (황금 계단)
+        for (let i = 0; i < 4; i++) {
+            const z = 139 + i * 4.0;
+            createPlatform(0, 9.5 + i * 0.5, z, 4.2, 0.7, 3.2, 0x6366f1);
+        }
+
+        // [Stage 7] 🏆 최종 황금 트로피 궁전 섬 (초대형 우승 광장!)
+        const winIsland = createPlatform(0, 12.0, 162, 10, 1.2, 10, 0xfacc15);
+
+        // 3D 대형 황금 트로피
         const trophyGroup = new THREE.Group();
-        const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.8, roughness: 0.2 });
-        const tBase = new THREE.Mesh(new THREE.CylinderGeometry(0.8, 1.1, 0.4, 16), goldMat);
+        const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.85, roughness: 0.15 });
+        const tBase = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.3, 0.5, 16), goldMat);
         trophyGroup.add(tBase);
-        const tStem = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.9, 16), goldMat);
-        tStem.position.y = 0.65;
+        const tStem = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.1, 16), goldMat);
+        tStem.position.y = 0.8;
         trophyGroup.add(tStem);
-        const tCup = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 0.5, 1.3, 16), goldMat);
-        tCup.position.y = 1.7;
+        const tCup = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 0.6, 1.6, 16), goldMat);
+        tCup.position.y = 2.1;
         trophyGroup.add(tCup);
-        trophyGroup.position.set(0, 13.7, 114);
+        trophyGroup.position.set(0, 13.5, 162);
         scene.add(trophyGroup);
 
         /* ----------------------------------------------------
@@ -895,7 +906,7 @@
         const player = {
             x: 0, y: 1.5, z: 0,
             vx: 0, vy: 0, vz: 0,
-            speed: 0.16,
+            speed: 0.17,
             jumpForce: 0.28,
             gravity: 0.013,
             isGrounded: true,
@@ -930,7 +941,6 @@
             setTimeout(() => b.classList.remove('show'), 1600);
         }
 
-        // Teasing phrases on fall
         const teasePhrases = [
             "메롱~ 우진이 번지점프! 😜",
             "어디 가니 우진아~ 🤣",
@@ -940,7 +950,7 @@
         ];
 
         function respawn() {
-            playTeaseFallSound(); // 🤪 Play funny mocking music!
+            playTeaseFallSound();
             const randomTease = teasePhrases[Math.floor(Math.random() * teasePhrases.length)];
             showBanner(randomTease, true);
 
@@ -1026,11 +1036,9 @@
         jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doJump(); }, { passive: false });
         jumpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); doJump(); });
 
-        // Anywhere touch enables BGM audio on mobile
         window.addEventListener('touchstart', () => { initAudio(); }, { once: true });
         window.addEventListener('click', () => { initAudio(); }, { once: true });
 
-        // Keyboard Controls
         const keys = {};
         window.addEventListener('keydown', (e) => {
             initAudio();
@@ -1050,7 +1058,7 @@
         function animate() {
             requestAnimationFrame(animate);
 
-            // 1. Inputs (Joystick + Keyboard) - 좌우 컨트롤 반전 수정 완료!
+            // Left/Right control fixed
             let inputX = -joyVector.x;
             let inputZ = -joyVector.y;
 
@@ -1067,7 +1075,12 @@
 
             if (gameActive) {
                 player.vx = inputX * player.speed;
-                player.vz = inputZ * player.speed;
+                // If not in special spring forward-boost state, apply normal input vz
+                if (Math.abs(player.vz) < 0.25 || player.isGrounded) {
+                    player.vz = inputZ * player.speed;
+                } else {
+                    player.vz *= 0.985; // Smooth deceleration after spring launch
+                }
 
                 if (inputLen > 0.1) {
                     player.rotY = Math.atan2(player.vx, player.vz);
@@ -1094,26 +1107,28 @@
                 // Ground Collision
                 player.isGrounded = false;
                 for (const plat of platforms) {
-                    const margin = 0.35;
+                    const margin = 0.45;
                     if (player.x >= plat.minX - margin && player.x <= plat.maxX + margin &&
                         player.z >= plat.minZ - margin && player.z <= plat.maxZ + margin) {
                         if (player.y <= plat.topY + 0.15 && player.y >= plat.topY - 0.7 && player.vy <= 0) {
                             player.y = plat.topY;
                             player.vy = 0;
+                            player.vz = 0; // Stop spring momentum upon landing
                             player.isGrounded = true;
                             break;
                         }
                     }
                 }
 
-                // Spring Pad check
+                // 🚀 Super Spring Pad Check (점프력 상승 + 앞으로 시원하게 부스트 발사!)
                 for (const pad of springPads) {
                     const dist = Math.hypot(player.x - pad.x, player.z - pad.z);
-                    if (dist < pad.width / 2 && Math.abs(player.y - pad.y) < 0.6) {
-                        player.vy = 0.44;
+                    if (dist < pad.width / 2 && Math.abs(player.y - pad.y) < 0.7) {
+                        player.vy = 0.46; // High airtime
+                        player.vz = 0.36; // Powerful forward flight straight to Pink Island!
                         player.isGrounded = false;
                         playSpringSound();
-                        showBanner("🚀 슈퍼 점프 패드 발동!");
+                        showBanner("🚀 슈퍼 점프! 핑크섬으로 슝~");
                         break;
                     }
                 }
@@ -1121,7 +1136,7 @@
                 // Checkpoint check
                 for (const cp of checkpoints) {
                     const dist = Math.hypot(player.x - cp.x, player.z - cp.z);
-                    if (dist < 2.5 && !cp.activated) {
+                    if (dist < 3.2 && !cp.activated) {
                         cp.activated = true;
                         cp.flagMat.color.setHex(0x22c55e);
                         spawnPoint = { x: cp.x, y: cp.y, z: cp.z };
@@ -1136,7 +1151,7 @@
                         s.group.rotation.y += 0.04;
                         s.group.rotation.x += 0.02;
                         const dist = Math.hypot(player.x - s.x, player.y - s.y, player.z - s.z);
-                        if (dist < 1.2) {
+                        if (dist < 1.4) {
                             s.collected = true;
                             scene.remove(s.group);
                             starsCollected++;
@@ -1152,7 +1167,7 @@
                     const dx = player.x - h.centerX;
                     const dz = player.z - h.z;
                     const distToCenter = Math.hypot(dx, dz);
-                    if (distToCenter < h.length / 2 && Math.abs(player.y - h.y) < 0.8) {
+                    if (distToCenter < h.length / 2 && Math.abs(player.y - h.y) < 0.75) {
                         respawn();
                         break;
                     }
@@ -1163,8 +1178,8 @@
                     respawn();
                 }
 
-                // Goal Trophy Check
-                if (player.z >= 111 && player.y >= 12.0) {
+                // Goal Trophy Check (최종 7구역 황금 트로피 도착)
+                if (player.z >= 158 && player.y >= 11.0) {
                     winGame();
                 }
             }
