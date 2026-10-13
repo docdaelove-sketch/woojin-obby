@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>우진이의 로블록스 점프 어드벤처</title>
+    <title>우진이의 20단계 슈퍼 로블록스 점프 어드벤처</title>
     <!-- Three.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
@@ -29,36 +29,37 @@
             left: 0;
             top: 0;
         }
+
         /* Top HUD */
         #hud {
             position: absolute;
-            top: env(safe-area-inset-top, 16px);
-            left: 16px;
-            right: 16px;
+            top: env(safe-area-inset-top, 14px);
+            left: 14px;
+            right: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             pointer-events: none;
-            z-index: 10;
+            z-index: 20;
         }
         .profile-card {
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.68);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             color: #fff;
-            padding: 6px 14px 6px 6px;
-            border-radius: 28px;
-            font-size: 14px;
+            padding: 5px 12px 5px 6px;
+            border-radius: 26px;
+            font-size: 13px;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             border: 2px solid rgba(255, 215, 0, 0.6);
             box-shadow: 0 4px 15px rgba(0,0,0,0.25);
         }
         .profile-img-wrap {
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             border: 2px solid #ffd700;
             overflow: hidden;
@@ -80,18 +81,18 @@
             color: #000;
             padding: 1px 6px;
             border-radius: 8px;
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 900;
             width: fit-content;
         }
         .hud-card {
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.68);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             color: #fff;
-            padding: 8px 14px;
+            padding: 7px 12px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 800;
             display: flex;
             align-items: center;
@@ -101,62 +102,129 @@
         }
         .sound-btn {
             pointer-events: auto;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.68);
             border: 2px solid rgba(255, 255, 255, 0.3);
             color: white;
-            font-size: 16px;
-            padding: 8px 12px;
+            font-size: 14px;
+            padding: 7px 11px;
             border-radius: 20px;
             cursor: pointer;
         }
 
-        /* Active Item Buff Badge Bar */
-        #buff-bar {
+        /* TOP 5 Leaderboard Card (Left screen, semi-transparent) */
+        #leaderboard-card {
             position: absolute;
-            top: 75px;
-            left: 16px;
+            top: 72px;
+            left: 14px;
+            width: 156px;
+            background: rgba(0, 0, 0, 0.48);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(255, 255, 255, 0.25);
+            border-radius: 16px;
+            padding: 8px 10px;
+            color: #fff;
+            z-index: 15;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            transition: all 0.2s ease;
+        }
+        .lb-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 900;
+            color: #ffd700;
+            margin-bottom: 6px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .lb-toggle {
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: #fff;
+            border-radius: 6px;
+            padding: 1px 5px;
+            font-size: 10px;
+        }
+        .lb-list {
+            list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
+        }
+        .lb-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
+        .lb-item.rank1 { color: #ffd700; font-weight: 900; }
+        .lb-item.rank2 { color: #e2e8f0; font-weight: 800; }
+        .lb-item.rank3 { color: #f97316; font-weight: 800; }
+        .lb-name {
+            max-width: 72px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .lb-time {
+            font-family: monospace;
+            font-size: 10px;
+            opacity: 0.9;
+        }
+
+        /* Active Item Buff Badge Bar (Right side) */
+        #buff-bar {
+            position: absolute;
+            top: 72px;
+            right: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
             pointer-events: none;
-            z-index: 10;
+            z-index: 15;
+            align-items: flex-end;
         }
         .buff-pill {
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(0, 0, 0, 0.78);
             border: 2px solid #fff;
             color: #fff;
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 13px;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 12px;
             font-weight: 900;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             animation: pulseGlow 1s infinite alternate;
         }
         @keyframes pulseGlow {
             from { transform: scale(1); }
-            to { transform: scale(1.04); }
+            to { transform: scale(1.05); }
         }
 
         /* Mobile Controls */
         #touch-controls {
             position: absolute;
-            bottom: env(safe-area-inset-bottom, 24px);
+            bottom: env(safe-area-inset-bottom, 20px);
             left: 0;
             right: 0;
-            height: 160px;
+            height: 150px;
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
-            padding: 0 28px;
+            padding: 0 24px;
             pointer-events: none;
-            z-index: 20;
+            z-index: 25;
         }
         #joystick-zone {
-            width: 130px;
-            height: 130px;
+            width: 124px;
+            height: 124px;
             background: rgba(255, 255, 255, 0.22);
             border: 3px solid rgba(255, 255, 255, 0.5);
             border-radius: 50%;
@@ -166,25 +234,25 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.18);
         }
         #joystick-thumb {
-            width: 54px;
-            height: 54px;
+            width: 50px;
+            height: 50px;
             background: #ffcc00;
             border: 3px solid #fff;
             border-radius: 50%;
             position: absolute;
-            left: 35px;
-            top: 35px;
+            left: 34px;
+            top: 34px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
             transition: transform 0.05s ease-out;
         }
         #jump-btn {
-            width: 90px;
-            height: 90px;
+            width: 86px;
+            height: 86px;
             background: linear-gradient(135deg, #ff4757, #ff6b81);
             border: 4px solid #fff;
             border-radius: 50%;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
             display: flex;
             flex-direction: column;
@@ -199,21 +267,21 @@
             background: #e84118;
         }
         #jump-btn span {
-            font-size: 11px;
+            font-size: 10px;
             opacity: 0.9;
         }
 
         /* Checkpoint message & Tease message */
         #banner {
             position: absolute;
-            top: 28%;
+            top: 26%;
             left: 50%;
             transform: translate(-50%, -50%) scale(0.8);
             background: rgba(0, 0, 0, 0.88);
             color: #fffa65;
-            padding: 14px 28px;
-            border-radius: 30px;
-            font-size: 22px;
+            padding: 12px 24px;
+            border-radius: 26px;
+            font-size: 20px;
             font-weight: 900;
             border: 3px solid #fffa65;
             box-shadow: 0 8px 25px rgba(0,0,0,0.4);
@@ -222,6 +290,7 @@
             transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 50;
             text-align: center;
+            max-width: 85%;
         }
         #banner.show {
             opacity: 1;
@@ -245,48 +314,50 @@
         /* Victory Title during Cutscene */
         #cutscene-title {
             position: absolute;
-            top: 15%;
+            top: 14%;
             left: 50%;
             transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             color: #ffd700;
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 900;
-            padding: 12px 30px;
+            padding: 12px 28px;
             border-radius: 30px;
             border: 3px solid #ffd700;
             display: none;
             z-index: 60;
             text-align: center;
-            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.5);
+            box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6);
             animation: bounceIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            white-space: nowrap;
         }
         @keyframes bounceIn {
             0% { transform: translateX(-50%) scale(0.5); opacity: 0; }
             100% { transform: translateX(-50%) scale(1); opacity: 1; }
         }
 
-        /* Victory Modal */
+        /* Victory Modal with Name Input & Leaderboard Submission */
         #win-modal {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.82);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 100;
             backdrop-filter: blur(8px);
+            padding: 16px;
         }
         .modal-box {
             background: #ffffff;
             border-radius: 28px;
-            padding: 28px 24px;
+            padding: 24px 20px;
             text-align: center;
             max-width: 360px;
-            width: 90%;
+            width: 100%;
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
@@ -296,9 +367,9 @@
         }
         .winner-avatar-wrap {
             position: relative;
-            width: 92px;
-            height: 92px;
-            margin: 0 auto 12px;
+            width: 86px;
+            height: 86px;
+            margin: 0 auto 10px;
         }
         .winner-avatar-wrap img {
             width: 100%;
@@ -312,7 +383,7 @@
             position: absolute;
             top: -16px;
             right: -6px;
-            font-size: 34px;
+            font-size: 32px;
             animation: bounce 1s infinite alternate;
         }
         @keyframes bounce {
@@ -320,22 +391,22 @@
             to { transform: translateY(-8px); }
         }
         .modal-box h2 {
-            font-size: 23px;
+            font-size: 22px;
             color: #1e293b;
             font-weight: 900;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .modal-box p {
             color: #64748b;
-            font-size: 14px;
-            margin-bottom: 18px;
-            line-height: 1.5;
+            font-size: 13px;
+            margin-bottom: 14px;
+            line-height: 1.4;
         }
         .stats-grid {
             background: #f1f5f9;
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 20px;
+            border-radius: 14px;
+            padding: 10px;
+            margin-bottom: 14px;
             display: flex;
             justify-content: space-around;
         }
@@ -343,27 +414,84 @@
             text-align: center;
         }
         .stat-val {
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 900;
             color: #0f172a;
         }
         .stat-lbl {
             font-size: 11px;
             color: #64748b;
-            margin-top: 2px;
+            margin-top: 1px;
         }
+
+        /* Leaderboard Name Register Zone */
+        #record-register-box {
+            background: #eff6ff;
+            border: 2px dashed #3b82f6;
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 14px;
+        }
+        .register-title {
+            font-size: 13px;
+            font-weight: 900;
+            color: #1e40af;
+            margin-bottom: 8px;
+        }
+        .register-input-row {
+            display: flex;
+            gap: 6px;
+        }
+        #player-name-input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 2px solid #cbd5e1;
+            font-size: 14px;
+            font-weight: 800;
+            outline: none;
+            text-align: center;
+        }
+        #player-name-input:focus {
+            border-color: #2563eb;
+        }
+        #btn-submit-name {
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        #rank-alert-box {
+            display: none;
+            font-size: 13px;
+            font-weight: 900;
+            padding: 8px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            animation: bounceIn 0.4s ease;
+        }
+        #rank-alert-box.top5 {
+            background: #fef08a;
+            color: #854d0e;
+            border: 2px solid #eab308;
+        }
+
         .btn-row {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
         .action-btn {
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: #fff;
             border: none;
-            padding: 13px;
+            padding: 12px;
             border-radius: 14px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
@@ -372,9 +500,9 @@
             background: #fee500;
             color: #191919;
             border: none;
-            padding: 13px;
+            padding: 12px;
             border-radius: 14px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(254, 229, 0, 0.4);
@@ -384,17 +512,18 @@
 <body>
     <div id="canvas-container"></div>
 
+    <!-- HUD -->
     <div id="hud">
         <div class="profile-card">
             <div class="profile-img-wrap">
                 <img src="woojin.png" alt="우진이">
             </div>
             <div class="profile-info">
-                <span class="badge-tag">Lv.10 우진</span>
-                <span>⭐ <span id="star-count">0</span> / 15</span>
+                <span class="badge-tag">Lv.20 마스터 우진</span>
+                <span>⭐ <span id="star-count">0</span> / 30</span>
             </div>
         </div>
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:6px;">
             <div class="hud-card">
                 <span>⏱️ <span id="timer-text">00:00</span></span>
             </div>
@@ -402,9 +531,21 @@
         </div>
     </div>
 
-    <!-- Active Item Buff Bar -->
+    <!-- TOP 5 Semi-transparent Leaderboard on Left -->
+    <div id="leaderboard-card">
+        <div class="lb-header">
+            <span>🏆 TOP 5 랭킹</span>
+            <button class="lb-toggle" onclick="toggleLeaderboard()" id="lb-toggle-btn">▲</button>
+        </div>
+        <ul class="lb-list" id="lb-list-content">
+            <!-- Dynamically populated from localStorage -->
+        </ul>
+    </div>
+
+    <!-- Active Item Buff Bar (Right) -->
     <div id="buff-bar"></div>
 
+    <!-- Virtual Touch Controls -->
     <div id="touch-controls">
         <div id="joystick-zone">
             <div id="joystick-thumb"></div>
@@ -416,28 +557,40 @@
     </div>
 
     <div id="banner"></div>
-    <div id="cutscene-title">👑 우진이 챔피언 등극! 👑</div>
+    <div id="cutscene-title">👑 20단계 완전정복! 챔피언 우진! 👑</div>
 
+    <!-- Victory & Record Registration Modal -->
     <div id="win-modal">
         <div class="modal-box">
             <div class="winner-avatar-wrap">
                 <img src="woojin.png" alt="우진이">
                 <div class="winner-crown">👑</div>
             </div>
-            <h2>우진이 탈출 대성공!</h2>
-            <p>10살 우진이가 총 7단계 장애물 코스를 완벽 클리어하고 전설의 황금 트로피를 차지했습니다!</p>
+            <h2>20단계 완전 정복 대성공!</h2>
+            <p>10살 우진이와 함께 모든 몬스터와 레이저를 뚫고 전설의 챔피언 황금 트로피에 도달했습니다!</p>
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-val" id="win-stars">15</div>
+                    <div class="stat-val" id="win-stars">30</div>
                     <div class="stat-lbl">모은 황금별</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-val" id="win-time">00:45</div>
+                    <div class="stat-val" id="win-time">02:30</div>
                     <div class="stat-lbl">클리어 시간</div>
                 </div>
             </div>
+
+            <!-- Friend Name Input Box -->
+            <div id="record-register-box">
+                <div class="register-title">우진이 친구 명예의 전당 등록 ✍️</div>
+                <div class="register-input-row">
+                    <input id="player-name-input" type="text" placeholder="친구 이름 (예: 민준)" maxlength="6">
+                    <button id="btn-submit-name" onclick="submitPlayerRecord()">등록!</button>
+                </div>
+            </div>
+            <div id="rank-alert-box"></div>
+
             <div class="btn-row">
-                <button class="share-btn" onclick="shareGame()">카톡으로 친구에게 링크 자랑하기 💬</button>
+                <button class="share-btn" onclick="shareGame()">카톡으로 친구에게 도전장 보내기 💬</button>
                 <button class="action-btn" onclick="restartGame()">처음부터 다시 도전! 🔄</button>
             </div>
         </div>
@@ -511,7 +664,7 @@
                     const gain = audioCtx.createGain();
                     osc.type = 'triangle';
                     osc.frequency.setValueAtTime(note, now);
-                    gain.gain.setValueAtTime(0.06, now);
+                    gain.gain.setValueAtTime(0.055, now);
                     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.14);
                     osc.connect(gain);
                     gain.connect(bgmGainNode);
@@ -524,7 +677,7 @@
                     const bGain = audioCtx.createGain();
                     bOsc.type = 'sine';
                     bOsc.frequency.setValueAtTime(bass, now);
-                    bGain.gain.setValueAtTime(0.08, now);
+                    bGain.gain.setValueAtTime(0.075, now);
                     bGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
                     bOsc.connect(bGain);
                     bGain.connect(bgmGainNode);
@@ -552,10 +705,30 @@
         const playWinSound = () => {
             [523, 659, 783, 1046, 1318].forEach((f, i) => setTimeout(() => playTone(f, 'triangle', 0.4), i * 140));
         };
+        const playEnemyDefeatSound = () => {
+            playTone(587, 'triangle', 0.08, 988, 0.28);
+            setTimeout(() => playTone(988, 'sine', 0.16, 1318, 0.22), 60);
+        };
+        const playRocketSound = () => {
+            playTone(180, 'sawtooth', 0.35, 520, 0.24);
+        };
+        const playTop5FanfareSound = () => {
+            if (!soundEnabled || !audioCtx) return;
+            const fanfare = [
+                { f: 523, d: 0.16, t: 0 },
+                { f: 523, d: 0.16, t: 160 },
+                { f: 523, d: 0.16, t: 320 },
+                { f: 659, d: 0.42, t: 480 },
+                { f: 783, d: 0.32, t: 800 },
+                { f: 1046, d: 0.75, t: 1050 }
+            ];
+            fanfare.forEach(note => {
+                setTimeout(() => playTone(note.f, 'triangle', note.d, null, 0.32), note.t);
+            });
+        };
 
         const playTeaseFallSound = () => {
             if (!soundEnabled || !audioCtx) return;
-
             if (bgmGainNode) {
                 bgmGainNode.gain.setValueAtTime(0.005, audioCtx.currentTime);
                 setTimeout(() => {
@@ -564,12 +737,10 @@
                     }
                 }, 1600);
             }
-
             const teaseNotes = [392, 370, 349];
             teaseNotes.forEach((f, i) => {
                 setTimeout(() => playTone(f, 'sawtooth', 0.22, f - 12, 0.22), i * 210);
             });
-
             setTimeout(() => {
                 if (!soundEnabled || !audioCtx) return;
                 try {
@@ -607,7 +778,7 @@
         const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
         scene.background = new THREE.Color(0x70c5ff);
-        scene.fog = new THREE.FogExp2(0x70c5ff, 0.012);
+        scene.fog = new THREE.FogExp2(0x70c5ff, 0.009);
 
         const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -617,86 +788,86 @@
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         container.appendChild(renderer.domElement);
 
-        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.9);
+        const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444455, 0.95);
         scene.add(hemiLight);
 
         const dirLight = new THREE.DirectionalLight(0xffffff, 0.95);
-        dirLight.position.set(30, 50, 20);
+        dirLight.position.set(30, 60, 20);
         dirLight.castShadow = true;
         dirLight.shadow.mapSize.width = 1024;
         dirLight.shadow.mapSize.height = 1024;
-        dirLight.shadow.camera.left = -40;
-        dirLight.shadow.camera.right = 40;
-        dirLight.shadow.camera.top = 40;
-        dirLight.shadow.camera.bottom = -40;
+        dirLight.shadow.camera.left = -50;
+        dirLight.shadow.camera.right = 50;
+        dirLight.shadow.camera.top = 50;
+        dirLight.shadow.camera.bottom = -50;
         scene.add(dirLight);
 
         /* ----------------------------------------------------
-           3. Build Woojin Model (Photo-based Smiling Hero!)
+           3. Build Character: 10-year-old Woojin (우진이)
         ---------------------------------------------------- */
         const woojin = new THREE.Group();
-        woojin.position.set(0, 1.5, 0);
         scene.add(woojin);
 
-        const skinColor = 0xffe2cd;
-        const skinMat = new THREE.MeshLambertMaterial({ color: skinColor });
-        const hairMat = new THREE.MeshLambertMaterial({ color: 0x1f1a17 });
+        function createFaceTexture() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 256;
+            canvas.height = 256;
+            const ctx = canvas.getContext('2d');
+            ctx.fillStyle = "#ffe0bd";
+            ctx.fillRect(0, 0, 256, 256);
+
+            // Cute sparkly cartoon eyes
+            ctx.fillStyle = "#2c3e50";
+            ctx.beginPath(); ctx.arc(75, 115, 20, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(181, 115, 20, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = "#ffffff";
+            ctx.beginPath(); ctx.arc(82, 107, 7, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(188, 107, 7, 0, Math.PI * 2); ctx.fill();
+
+            // Rosy cheeks
+            ctx.fillStyle = "rgba(255, 120, 140, 0.4)";
+            ctx.beginPath(); ctx.arc(60, 142, 18, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(196, 142, 18, 0, Math.PI * 2); ctx.fill();
+
+            // Broad happy smile
+            ctx.strokeStyle = "#d63031";
+            ctx.lineWidth = 7;
+            ctx.lineCap = "round";
+            ctx.beginPath();
+            ctx.arc(128, 142, 34, 0.15 * Math.PI, 0.85 * Math.PI);
+            ctx.stroke();
+
+            // Eyebrows
+            ctx.strokeStyle = "#3e2723";
+            ctx.lineWidth = 5;
+            ctx.beginPath(); ctx.arc(75, 95, 22, 1.2 * Math.PI, 1.8 * Math.PI); ctx.stroke();
+            ctx.beginPath(); ctx.arc(181, 95, 22, 1.2 * Math.PI, 1.8 * Math.PI); ctx.stroke();
+
+            return new THREE.CanvasTexture(canvas);
+        }
+
+        const skinMat = new THREE.MeshLambertMaterial({ color: 0xffe0bd });
+        const hairMat = new THREE.MeshLambertMaterial({ color: 0x1f1f1f });
         const shirtMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
-        const greenTrimMat = new THREE.MeshLambertMaterial({ color: 0x15803d });
-        const pantsMat = new THREE.MeshLambertMaterial({ color: 0x1e293b });
-        const shoeMat = new THREE.MeshLambertMaterial({ color: 0xffffff });
+        const greenTrimMat = new THREE.MeshLambertMaterial({ color: 0x10b981 });
+        const pantsMat = new THREE.MeshLambertMaterial({ color: 0x334155 });
+        const shoeMat = new THREE.MeshLambertMaterial({ color: 0x0284c7 });
 
-        const faceCanvas = document.createElement('canvas');
-        faceCanvas.width = 256;
-        faceCanvas.height = 256;
-        const ctx = faceCanvas.getContext('2d');
-
-        ctx.fillStyle = '#ffe2cd';
-        ctx.fillRect(0, 0, 256, 256);
-
-        ctx.strokeStyle = '#1f1a17';
-        ctx.lineWidth = 6;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(60, 100); ctx.quadraticCurveTo(85, 92, 110, 102);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(146, 102); ctx.quadraticCurveTo(171, 92, 196, 100);
-        ctx.stroke();
-
-        ctx.fillStyle = '#111827';
-        ctx.beginPath(); ctx.ellipse(85, 122, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.ellipse(171, 122, 16, 12, 0, 0, Math.PI * 2); ctx.fill();
-
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath(); ctx.arc(80, 118, 5, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(166, 118, 5, 0, Math.PI * 2); ctx.fill();
-
-        ctx.fillStyle = 'rgba(255, 130, 130, 0.4)';
-        ctx.beginPath(); ctx.arc(72, 142, 14, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(184, 142, 14, 0, Math.PI * 2); ctx.fill();
-
-        ctx.fillStyle = '#e8b89e';
-        ctx.beginPath(); ctx.arc(128, 146, 4, 0, Math.PI * 2); ctx.fill();
-
-        // Big Radiant Smile!
-        ctx.strokeStyle = '#b91c1c';
-        ctx.lineWidth = 6;
-        ctx.beginPath();
-        ctx.arc(128, 156, 28, 0.18 * Math.PI, 0.82 * Math.PI);
-        ctx.stroke();
-
-        const faceTexture = new THREE.CanvasTexture(faceCanvas);
+        const faceTexture = createFaceTexture();
         const faceMat = new THREE.MeshLambertMaterial({ map: faceTexture });
 
-        const headMaterials = [skinMat, skinMat, skinMat, skinMat, faceMat, skinMat];
-        const head = new THREE.Mesh(new THREE.BoxGeometry(0.72, 0.72, 0.72), headMaterials);
-        head.position.y = 1.35;
+        const headMaterials = [
+            skinMat, skinMat, skinMat, skinMat,
+            faceMat, hairMat
+        ];
+
+        const head = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.76, 0.7), headMaterials);
+        head.position.y = 1.38;
         head.castShadow = true;
         woojin.add(head);
 
-        const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.76, 0.28, 0.76), hairMat);
-        hairTop.position.set(0, 1.62, 0);
+        const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.82, 0.28, 0.76), hairMat);
+        hairTop.position.set(0, 1.72, 0);
         hairTop.castShadow = true;
         woojin.add(hairTop);
 
@@ -758,6 +929,13 @@
         rightArmGroup.add(rightHand);
         woojin.add(rightArmGroup);
 
+        // 🥊 Boxing Glove for Super Punch Item
+        const punchGloveMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 });
+        const punchGlove = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.42, 0.42), punchGloveMat);
+        punchGlove.position.set(0, -0.62, 0.1);
+        punchGlove.visible = false;
+        rightArmGroup.add(punchGlove);
+
         const leftLegGroup = new THREE.Group();
         leftLegGroup.position.set(-0.24, 0.2, 0);
         const leftLeg = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.75, 0.35), pantsMat);
@@ -780,30 +958,72 @@
         rightLegGroup.add(rightShoe);
         woojin.add(rightLegGroup);
 
-        // Shield Bubble Visual around Woojin (Activated on shield pickup)
-        const shieldBubbleGeo = new THREE.SphereGeometry(1.3, 24, 24);
+        // 🛡️ Shield Bubble Visual around Woojin
+        const shieldBubbleGeo = new THREE.SphereGeometry(1.35, 24, 24);
         const shieldBubbleMat = new THREE.MeshStandardMaterial({
             color: 0x38bdf8,
             transparent: true,
             opacity: 0.38,
             roughness: 0.1,
-            metalness: 0.9,
-            wireframe: false
+            metalness: 0.9
         });
         const shieldBubble = new THREE.Mesh(shieldBubbleGeo, shieldBubbleMat);
         shieldBubble.position.y = 0.9;
         shieldBubble.visible = false;
         woojin.add(shieldBubble);
 
+        // ⭐ Star Invincibility Rainbow Aura
+        const starAuraGeo = new THREE.TorusGeometry(1.1, 0.08, 8, 24);
+        const starAuraMat = new THREE.MeshBasicMaterial({ color: 0xffd700 });
+        const starAura = new THREE.Mesh(starAuraGeo, starAuraMat);
+        starAura.position.y = 1.0;
+        starAura.rotation.x = Math.PI / 2;
+        starAura.visible = false;
+        woojin.add(starAura);
+
+        // 🚀 1% Chance Rocket Booster Jetpack on Woojin's Back
+        const rocketPack = new THREE.Group();
+        const rocketBodyMat = new THREE.MeshStandardMaterial({ color: 0xef4444, metalness: 0.5 });
+        const rocketConeMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+        const flameMat = new THREE.MeshBasicMaterial({ color: 0xf97316 });
+
+        // Left thruster
+        const thruster1 = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.65, 8), rocketBodyMat);
+        thruster1.position.set(-0.2, 0, 0);
+        rocketPack.add(thruster1);
+        const cone1 = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.25, 8), rocketConeMat);
+        cone1.position.set(-0.2, 0.42, 0);
+        rocketPack.add(cone1);
+        const flame1 = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.35, 6), flameMat);
+        flame1.position.set(-0.2, -0.42, 0);
+        flame1.rotation.x = Math.PI;
+        rocketPack.add(flame1);
+
+        // Right thruster
+        const thruster2 = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.14, 0.65, 8), rocketBodyMat);
+        thruster2.position.set(0.2, 0, 0);
+        rocketPack.add(thruster2);
+        const cone2 = new THREE.Mesh(new THREE.ConeGeometry(0.14, 0.25, 8), rocketConeMat);
+        cone2.position.set(0.2, 0.42, 0);
+        rocketPack.add(cone2);
+        const flame2 = new THREE.Mesh(new THREE.ConeGeometry(0.12, 0.35, 6), flameMat);
+        flame2.position.set(0.2, -0.42, 0);
+        flame2.rotation.x = Math.PI;
+        rocketPack.add(flame2);
+
+        rocketPack.position.set(0, 0.72, -0.32);
+        rocketPack.visible = false;
+        woojin.add(rocketPack);
+
         // Shadow blob
         const shadowMat = new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.25 });
-        const shadowMesh = new THREE.Mesh(new THREE.CircleGeometry(0.6, 24), shadowMat);
+        const shadowMesh = new THREE.Mesh(new THREE.CircleGeometry(0.65, 24), shadowMat);
         shadowMesh.rotation.x = -Math.PI / 2;
         shadowMesh.position.y = 0.02;
         scene.add(shadowMesh);
 
         /* ----------------------------------------------------
-           4. Build the Obby Platforms & Power-Up Items!
+           4. Game State & Data Arrays
         ---------------------------------------------------- */
         const platforms = [];
         const stars = [];
@@ -811,6 +1031,8 @@
         const springPads = [];
         const checkpoints = [];
         const powerItems = [];
+        const enemies = [];
+        const sparkParticles = [];
 
         function createPlatform(x, y, z, w, h, d, color = 0x3b82f6) {
             const geo = new THREE.BoxGeometry(w, h, d);
@@ -848,7 +1070,7 @@
             stars.push({ group, x, y, z, collected: false });
         }
 
-        // Power-Up Items: Speed Shoes ⚡, Invincible Shield 🛡️, Super Jump Spring 🦘
+        // Expanded Items: speed ⚡, shield 🛡️, jump 🦘, star ⭐, punch 🥊, magnet 🧲, rocket 🚀, mystery ❓
         function createPowerItem(x, y, z, type) {
             const group = new THREE.Group();
             let color = 0xf59e0b;
@@ -873,6 +1095,36 @@
                 const springGeo = new THREE.CylinderGeometry(0.32, 0.32, 0.7, 8);
                 const springMat = new THREE.MeshStandardMaterial({ color, roughness: 0.3 });
                 group.add(new THREE.Mesh(springGeo, springMat));
+            } else if (type === 'star') {
+                color = 0xffd700;
+                iconLabel = "⭐ 황금 무적 스타";
+                const starGeo = new THREE.OctahedronGeometry(0.45);
+                const starMat = new THREE.MeshStandardMaterial({ color: 0xffea00, metalness: 0.8, roughness: 0.1 });
+                group.add(new THREE.Mesh(starGeo, starMat));
+            } else if (type === 'punch') {
+                color = 0xef4444;
+                iconLabel = "🥊 파이어 펀치";
+                const gloveGeo = new THREE.BoxGeometry(0.5, 0.5, 0.5);
+                const gloveMat = new THREE.MeshStandardMaterial({ color: 0xef4444, roughness: 0.3 });
+                group.add(new THREE.Mesh(gloveGeo, gloveMat));
+            } else if (type === 'magnet') {
+                color = 0x8b5cf6;
+                iconLabel = "🧲 슈퍼 자석";
+                const magGeo = new THREE.TorusGeometry(0.35, 0.12, 8, 12, Math.PI);
+                const magMat = new THREE.MeshStandardMaterial({ color: 0x8b5cf6 });
+                group.add(new THREE.Mesh(magGeo, magMat));
+            } else if (type === 'rocket') {
+                color = 0xff0044;
+                iconLabel = "🚀 황금 로켓 부스터";
+                const rGeo = new THREE.CylinderGeometry(0.2, 0.25, 0.8, 8);
+                const rMat = new THREE.MeshStandardMaterial({ color: 0xff0055, metalness: 0.6 });
+                group.add(new THREE.Mesh(rGeo, rMat));
+            } else if (type === 'mystery') {
+                color = 0xa855f7;
+                iconLabel = "❓ 행운의 미스터리 큐브";
+                const cubeGeo = new THREE.BoxGeometry(0.65, 0.65, 0.65);
+                const cubeMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, roughness: 0.2 });
+                group.add(new THREE.Mesh(cubeGeo, cubeMat));
             }
 
             // Glowing ring below item
@@ -891,6 +1143,83 @@
                 type,
                 label: iconLabel,
                 collected: false
+            });
+        }
+
+        // Cute Obstacle Monsters: slime 🟢, robot 🤖, bee 🟣
+        function createEnemy(type, x, y, z, patrolAxis = 'x', patrolMin = -2, patrolMax = 2, speed = 0.04) {
+            const group = new THREE.Group();
+            let bodyColor = 0x22c55e;
+
+            if (type === 'slime') {
+                bodyColor = 0x22c55e;
+                const bodyMesh = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 0.8), new THREE.MeshLambertMaterial({ color: bodyColor }));
+                bodyMesh.position.y = 0.35;
+                group.add(bodyMesh);
+
+                // Cute big eyes
+                const eyeMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+                const pupilMat = new THREE.MeshBasicMaterial({ color: 0x000000 });
+                const eyeL = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.08), eyeMat);
+                eyeL.position.set(-0.2, 0.45, 0.41);
+                group.add(eyeL);
+                const pupilL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.04), pupilMat);
+                pupilL.position.set(-0.2, 0.45, 0.46);
+                group.add(pupilL);
+
+                const eyeR = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.18, 0.08), eyeMat);
+                eyeR.position.set(0.2, 0.45, 0.41);
+                group.add(eyeR);
+                const pupilR = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.08, 0.04), pupilMat);
+                pupilR.position.set(0.2, 0.45, 0.46);
+                group.add(pupilR);
+            } else if (type === 'robot') {
+                bodyColor = 0xf97316;
+                const rBody = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.85, 0.7), new THREE.MeshLambertMaterial({ color: bodyColor }));
+                rBody.position.y = 0.42;
+                group.add(rBody);
+
+                // Yellow visor
+                const visor = new THREE.Mesh(new THREE.BoxGeometry(0.65, 0.2, 0.1), new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+                visor.position.set(0, 0.52, 0.36);
+                group.add(visor);
+
+                // Antenna
+                const ant = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.3, 6), new THREE.MeshBasicMaterial({ color: 0xffffff }));
+                ant.position.set(0, 0.95, 0);
+                group.add(ant);
+            } else if (type === 'bee') {
+                bodyColor = 0xa855f7;
+                const beeBody = new THREE.Mesh(new THREE.SphereGeometry(0.45, 12, 12), new THREE.MeshLambertMaterial({ color: bodyColor }));
+                beeBody.position.y = 0.45;
+                group.add(beeBody);
+
+                // Little wings
+                const wingMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.7 });
+                const wingL = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.04, 0.2), wingMat);
+                wingL.position.set(-0.4, 0.65, 0);
+                group.add(wingL);
+                const wingR = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.04, 0.2), wingMat);
+                wingR.position.set(0.4, 0.65, 0);
+                group.add(wingR);
+            }
+
+            group.position.set(x, y, z);
+            scene.add(group);
+
+            enemies.push({
+                group,
+                type,
+                baseY: y,
+                x, y, z,
+                patrolAxis,
+                patrolMin,
+                patrolMax,
+                currentPos: (patrolAxis === 'x') ? x : z,
+                dir: 1,
+                speed,
+                isDead: false,
+                deadTimer: 0
             });
         }
 
@@ -916,7 +1245,7 @@
             });
         }
 
-        function createSpringPad(x, y, z) {
+        function createSpringPad(x, y, z, pVy = 0.46, pVz = 0.36) {
             const padGeo = new THREE.BoxGeometry(2.4, 0.35, 2.4);
             const padMat = new THREE.MeshLambertMaterial({ color: 0x10b981 });
             const pad = new THREE.Mesh(padGeo, padMat);
@@ -930,7 +1259,7 @@
             arrow.rotation.y = Math.PI / 4;
             scene.add(arrow);
 
-            springPads.push({ x, y, z, width: 2.4 });
+            springPads.push({ x, y, z, width: 2.4, vy: pVy, vz: pVz });
         }
 
         function createLaserBar(x, y, z, length) {
@@ -940,99 +1269,195 @@
             bar.rotation.z = Math.PI / 2;
             bar.position.set(x, y, z);
             scene.add(bar);
-            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.025 });
+            hazards.push({ mesh: bar, centerX: x, y, z, length, speed: 0.024 });
         }
 
-        // ================= 7 STAGES MAP GENERATION =================
+        function spawnSparks(x, y, z) {
+            for (let i = 0; i < 12; i++) {
+                const geo = new THREE.BoxGeometry(0.15, 0.15, 0.15);
+                const mat = new THREE.MeshBasicMaterial({ color: (i % 2 === 0) ? 0xffcc00 : 0x22c55e });
+                const m = new THREE.Mesh(geo, mat);
+                m.position.set(x, y + 0.3, z);
+                scene.add(m);
+                sparkParticles.push({
+                    mesh: m,
+                    vx: (Math.random() - 0.5) * 0.35,
+                    vy: Math.random() * 0.4 + 0.2,
+                    vz: (Math.random() - 0.5) * 0.35,
+                    life: 1.0
+                });
+            }
+        }
+
+        /* ----------------------------------------------------
+           5. BUILD THE 20 STAGES TRACK! (Total 30 Stars)
+        ---------------------------------------------------- */
 
         // [시작 광장]
         createPlatform(0, 0, 0, 7, 1, 7, 0x38bdf8);
 
-        // [Stage 1] 🌈 무지개 웰컴 징검다리
-        const rainbowColors = [0xef4444, 0xf97316, 0xeab308, 0x22c55e, 0x06b6d4, 0x3b82f6, 0xa855f7];
+        // [Stage 1] 🌈 무지개 웰컴 징검다리 (기본 점프 연습)
+        const rainbowColors = [0xef4444, 0xf97316, 0xeab308, 0x22c55e, 0x06b6d4, 0x3b82f6];
         rainbowColors.forEach((col, i) => {
             const z = 6 + i * 3.6;
             const x = (i % 2 === 0) ? -1.0 : 1.0;
-            createPlatform(x, 0 + i * 0.3, z, 3.2, 0.7, 3.2, col);
-            if (i % 2 === 0) createStar(x, 1.8 + i * 0.3, z); // 별 1, 2, 3
+            createPlatform(x, 0 + i * 0.25, z, 3.4, 0.7, 3.4, col);
+            if (i % 2 === 0) createStar(x, 1.8 + i * 0.25, z); // 별 1, 2, 3
         });
 
-        // [Checkpoint 1 섬 & ⚡ 스피드 부스터 아이템]
-        createPlatform(0, 2.4, 34, 6, 0.8, 6, 0x10b981);
-        createCheckpoint(0, 2.4, 34, "🚩 [1구역 통과] 체크포인트 1 저장!");
-        createStar(0, 4.0, 34); // 별 4
-        createPowerItem(1.5, 3.6, 34, 'speed'); // ⚡ 스피드 부스터 아이템!
+        // [Stage 2] 🌸 핑크 구름 아일랜드
+        createPlatform(0, 2.0, 30, 6, 0.8, 6, 0xf43f5e);
+        createStar(0, 3.6, 30); // 별 4
 
-        // [Stage 2] 🔴 회전 레이저 함정 피하기 (앞에 🛡️ 무적 쉴드 아이템 배치!)
-        createPowerItem(0, 3.8, 38.5, 'shield'); // 🛡️ 무적 쉴드 아이템!
-        createPlatform(0, 2.4, 44, 5, 0.7, 10, 0x475569);
-        createLaserBar(0, 3.5, 41, 4.4);
-        createLaserBar(0, 3.5, 47, 4.4);
+        // [Stage 3] 🚩 [체크포인트 1] 🟢 슬라임 몬스터 출현! (밟으면 뿅! 처치)
+        createPlatform(0, 2.4, 42, 6, 0.8, 9, 0x10b981);
+        createCheckpoint(0, 2.4, 42, "🚩 [3단계 통과] 체크포인트 1 저장!");
+        createEnemy('slime', 0, 3.2, 45, 'x', -1.8, 1.8, 0.035);
         createStar(0, 4.2, 44); // 별 5
 
-        // [Checkpoint 2 섬 & 슈퍼 점프대]
-        createPlatform(0, 2.4, 55, 6, 0.8, 6, 0xf59e0b);
-        createCheckpoint(0, 2.4, 55, "🚩 [2구역 통과] 체크포인트 2 저장!");
-        createStar(0, 4.0, 55); // 별 6
-        createSpringPad(0, 3.2, 56.5);
+        // [Stage 4] ⚡ 스피드 런웨이 (번개 부스터 획득 & 질주)
+        createPlatform(0, 2.4, 56, 5, 0.8, 10, 0x3b82f6);
+        createPowerItem(0, 3.8, 53, 'speed'); // ⚡ 번개 스피드 부스터!
+        createStar(0, 4.2, 57); // 별 6
 
-        // [Stage 3] 🚀 대형 핑크 구름 섬 착지 (100% 안착!)
-        createPlatform(0, 5.0, 70, 8, 0.8, 8, 0xf43f5e);
-        createStar(0, 6.8, 70); // 별 7
-        createCheckpoint(0, 5.0, 70, "🚩 [3구역 통과] 핑크 구름섬 착지 성공!");
+        // [Stage 5] 🔴 회전 레이저 타워 & 🛡️ 무적 쉴드 획득
+        createPowerItem(0, 3.8, 68, 'shield'); // 🛡️ 무적 쉴드!
+        createPlatform(0, 2.4, 75, 5.5, 0.7, 10, 0x475569);
+        createLaserBar(0, 3.5, 72, 4.6);
+        createLaserBar(0, 3.5, 78, 4.6);
+        createStar(0, 4.2, 75); // 별 7
 
-        // [Stage 4] 🍭 캔디 파스텔 징검다리 (중간에 🦘 슈퍼 점프 포션 배치!)
-        const candyColors = [0xec4899, 0xa855f7, 0x6366f1, 0x3b82f6, 0x14b8a6];
-        candyColors.forEach((col, i) => {
-            const z = 78 + i * 3.8;
+        // [Stage 6] 🚩 [체크포인트 2] 🚀 슈퍼 점프대 1단 비행!
+        createPlatform(0, 2.4, 88, 6, 0.8, 6, 0xf59e0b);
+        createCheckpoint(0, 2.4, 88, "🚩 [6단계 통과] 체크포인트 2 저장!");
+        createStar(0, 4.0, 88); // 별 8
+        createSpringPad(0, 3.2, 89.5, 0.46, 0.36);
+
+        // [Stage 7] 🍭 캔디 파스텔 계단 & 🦘 캥거루 점프 스프링
+        createPlatform(0, 5.0, 104, 7, 0.8, 7, 0xec4899);
+        createPowerItem(0, 6.4, 104, 'jump'); // 🦘 슈퍼 점프 아이템!
+        createStar(0, 6.6, 104); // 별 9
+        for (let i = 0; i < 3; i++) {
+            const z = 111 + i * 4.0;
             const x = (i % 2 === 0) ? -1.2 : 1.2;
-            createPlatform(x, 5.0 + i * 0.35, z, 3.2, 0.7, 3.2, col);
-            if (i % 2 === 0) createStar(x, 6.8 + i * 0.35, z); // 별 8, 9, 10
-            if (i === 2) createPowerItem(x, 6.6 + i * 0.35, z, 'jump'); // 🦘 슈퍼 점프 아이템!
-        });
-
-        // [Checkpoint 4 섬]
-        createPlatform(0, 6.8, 100, 6, 0.8, 6, 0x06b6d4);
-        createCheckpoint(0, 6.8, 100, "🚩 [4구역 통과] 체크포인트 4 저장!");
-        createStar(0, 8.4, 100); // 별 11
-
-        // [Stage 5] 💎 에메랄드 크리스탈 정글 존 (중간에 ⚡ 스피드 부스터 추가!)
-        createPlatform(-2.5, 7.4, 108, 3.4, 0.7, 3.4, 0x10b981);
-        createStar(-2.5, 9.0, 108); // 별 12
-
-        createPlatform(2.5, 8.0, 115, 3.4, 0.7, 3.4, 0x059669);
-        createStar(2.5, 9.6, 115); // 별 13
-        createPowerItem(2.5, 9.2, 115, 'speed'); // ⚡ 번개 스피드 아이템!
-
-        createPlatform(0, 8.6, 122, 4.0, 0.7, 4.0, 0x047857);
-        createStar(0, 10.2, 122); // 별 14
-
-        // [Checkpoint 5 섬]
-        createPlatform(0, 9.0, 131, 6, 0.8, 6, 0x8b5cf6);
-        createCheckpoint(0, 9.0, 131, "🚩 [5구역 통과] 체크포인트 5 저장!");
-        createStar(0, 10.6, 131); // 별 15
-        createPowerItem(0, 10.4, 131, 'shield'); // 최종 코스 대비 🛡️ 무적 쉴드!
-
-        // [Stage 6] 🌌 은하수 스타 브릿지
-        for (let i = 0; i < 4; i++) {
-            const z = 139 + i * 4.0;
-            createPlatform(0, 9.5 + i * 0.5, z, 4.2, 0.7, 3.2, 0x6366f1);
+            createPlatform(x, 5.2 + i * 0.4, z, 3.4, 0.7, 3.4, 0xa855f7);
+            if (i === 1) createStar(x, 7.2, z); // 별 10
         }
 
-        // [Stage 7] 🏆 최종 황금 트로피 궁전 섬 (초대형 우승 광장!)
-        const winIsland = createPlatform(0, 12.0, 162, 10, 1.2, 10, 0xfacc15);
+        // [Stage 8] 🟣 보라색 꿀벌 몬스터 순찰대 피하기/밟기
+        createPlatform(0, 6.8, 126, 6, 0.8, 8, 0x6366f1);
+        createEnemy('bee', 0, 7.6, 128, 'x', -1.8, 1.8, 0.04);
+        createStar(0, 8.4, 126); // 별 11
 
+        // [Stage 9] ⭐ 황금 무적 스타 획득 & 몬스터 2마리 돌파!
+        createPlatform(0, 7.2, 138, 6, 0.8, 6, 0x14b8a6);
+        createPowerItem(0, 8.6, 137, 'star'); // ⭐ 황금 무적 스타!
+        createPlatform(0, 7.2, 148, 5, 0.8, 10, 0x0f766e);
+        createEnemy('slime', -1.0, 8.0, 146, 'z', 144, 150, 0.035);
+        createEnemy('slime', 1.0, 8.0, 149, 'z', 145, 151, 0.035);
+        createStar(0, 9.0, 148); // 별 12
+
+        // [Stage 10] 🚩 [체크포인트 3 - 하프 쉼터] 🏝️ 하늘 정원 & 1% 🚀 황금 로켓 찬스!
+        createPlatform(0, 8.0, 164, 8, 1.0, 8, 0x10b981);
+        createCheckpoint(0, 8.0, 164, "🚩 [10단계 하프 통과] 체크포인트 3 저장!");
+        createStar(0, 9.8, 164); // 별 13
+        // ❓ 미스터리 큐브: 1% 확률로 황금 로켓 부스터 스폰!
+        createPowerItem(2.0, 9.6, 164, 'mystery');
+        // 비밀 공중 행운 발판: 살짝 높은 곳에 황금 로켓 부스터 직접 배치!
+        createPlatform(-3.5, 9.5, 164, 2.5, 0.5, 2.5, 0xfacc15);
+        createPowerItem(-3.5, 10.8, 164, 'rocket'); // 🚀 황금 로켓 부스터!
+
+        // [Stage 11] 🧊 반짝이는 얼음 크리스탈 징검다리
+        for (let i = 0; i < 4; i++) {
+            const z = 175 + i * 3.8;
+            const x = (i % 2 === 0) ? -1.3 : 1.3;
+            createPlatform(x, 8.2 + i * 0.3, z, 3.4, 0.6, 3.4, 0x38bdf8);
+            if (i % 2 === 0) createStar(x, 10.0 + i * 0.3, z); // 별 14, 15
+        }
+
+        // [Stage 12] 🤖 장난감 로봇 몬스터 패트롤
+        createPlatform(0, 9.6, 194, 6, 0.8, 8, 0x0284c7);
+        createEnemy('robot', 0, 10.4, 195, 'x', -1.9, 1.9, 0.04);
+        createStar(0, 11.2, 194); // 별 16
+
+        // [Stage 13] 🥊 슈퍼 파이어 펀치 글러브 획득 & 몬스터 날리기
+        createPlatform(0, 10.0, 206, 6, 0.8, 6, 0xe11d48);
+        createPowerItem(0, 11.4, 205, 'punch'); // 🥊 파이어 펀치!
+        createPlatform(0, 10.0, 216, 5, 0.8, 10, 0xbe123c);
+        createEnemy('robot', 0, 10.8, 216, 'z', 213, 219, 0.038);
+        createStar(0, 11.8, 216); // 별 17
+
+        // [Stage 14] 🚩 [체크포인트 4] 🌀 더블 소용돌이 레이저 회랑
+        createPlatform(0, 10.5, 230, 6, 0.8, 6, 0x8b5cf6);
+        createCheckpoint(0, 10.5, 230, "🚩 [14단계 통과] 체크포인트 4 저장!");
+        createPowerItem(0, 12.0, 230, 'shield'); // 🛡️ 쉴드 보급!
+        createPlatform(0, 10.5, 240, 5, 0.7, 10, 0x475569);
+        createLaserBar(0, 11.6, 237, 4.4);
+        createLaserBar(0, 11.6, 243, 4.4);
+        createStar(0, 12.2, 240); // 별 18
+
+        // [Stage 15] 🎈 공중 풍선 바운스 발판 & 미스터리 큐브 2호
+        for (let i = 0; i < 3; i++) {
+            const z = 252 + i * 4.0;
+            const x = (i % 2 === 0) ? -1.4 : 1.4;
+            createPlatform(x, 11.0 + i * 0.4, z, 3.4, 0.7, 3.4, 0xf43f5e);
+            if (i === 1) {
+                createPowerItem(x, 12.8, z, 'mystery'); // ❓ 미스터리 큐브 (로켓 찬스!)
+                createStar(x, 13.0, z); // 별 19
+            }
+        }
+
+        // [Stage 16] 👻 쌍둥이 유령 몬스터 지대
+        createPlatform(0, 12.4, 268, 6, 0.8, 9, 0x7c3aed);
+        createEnemy('bee', -1.2, 13.2, 270, 'z', 266, 271, 0.04);
+        createEnemy('bee', 1.2, 13.2, 269, 'z', 267, 272, 0.04);
+        createStar(0, 14.0, 268); // 별 20
+
+        // [Stage 17] 🚩 [체크포인트 5] 🧲 슈퍼 자석 아이템 (주변 별 자동 흡착)
+        createPlatform(0, 13.0, 282, 6, 0.8, 6, 0x059669);
+        createCheckpoint(0, 13.0, 282, "🚩 [17단계 통과] 체크포인트 5 저장!");
+        createPowerItem(0, 14.4, 282, 'magnet'); // 🧲 자석 아이템!
+        createStar(-1.8, 14.6, 282); // 별 21
+        createStar(1.8, 14.6, 282); // 별 22
+
+        // [Stage 18] 🚀 2단 연속 슈퍼 점프 패드!
+        createPlatform(0, 13.5, 294, 6, 0.8, 6, 0xf59e0b);
+        createStar(0, 15.2, 294); // 별 23
+        createSpringPad(0, 14.3, 295.5, 0.46, 0.36);
+
+        createPlatform(0, 16.0, 310, 7, 0.8, 7, 0x10b981);
+        createStar(0, 17.8, 310); // 별 24
+        createSpringPad(0, 16.8, 311.5, 0.46, 0.36);
+
+        // [Stage 19] 🌈 무지개 천국 대계단 & 최종 몬스터 수문장!
+        createPlatform(0, 18.5, 328, 7, 0.8, 7, 0xec4899);
+        createPowerItem(0, 20.0, 328, 'star'); // ⭐ 최종 돌파용 황금 무적 스타!
+        createStar(0, 20.2, 328); // 별 25
+
+        for (let i = 0; i < 4; i++) {
+            const z = 337 + i * 4.2;
+            const x = (i % 2 === 0) ? -1.3 : 1.3;
+            createPlatform(x, 19.0 + i * 0.5, z, 3.6, 0.7, 3.6, rainbowColors[i]);
+            createStar(x, 21.0 + i * 0.5, z); // 별 26, 27, 28, 29
+        }
+        createEnemy('robot', 0, 21.8, 350, 'x', -1.8, 1.8, 0.04);
+
+        // [Stage 20] 🏆 초대형 챔피언 황금 트로피 신전 섬!
+        const winIsland = createPlatform(0, 22.0, 365, 12, 1.5, 12, 0xfacc15);
+        createStar(0, 24.2, 363); // 마지막 별 30!
+
+        // Grand Golden Trophy
         const trophyGroup = new THREE.Group();
-        const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.85, roughness: 0.15 });
-        const tBase = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.3, 0.5, 16), goldMat);
+        const goldMat = new THREE.MeshStandardMaterial({ color: 0xffd700, metalness: 0.88, roughness: 0.12 });
+        const tBase = new THREE.Mesh(new THREE.CylinderGeometry(1.2, 1.6, 0.6, 16), goldMat);
         trophyGroup.add(tBase);
-        const tStem = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 1.1, 16), goldMat);
-        tStem.position.y = 0.8;
+        const tStem = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 1.2, 16), goldMat);
+        tStem.position.y = 0.9;
         trophyGroup.add(tStem);
-        const tCup = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 0.6, 1.6, 16), goldMat);
-        tCup.position.y = 2.1;
+        const tCup = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 0.7, 1.8, 16), goldMat);
+        tCup.position.y = 2.4;
         trophyGroup.add(tCup);
-        trophyGroup.position.set(0, 13.5, 162);
+        trophyGroup.position.set(0, 23.5, 366);
         scene.add(trophyGroup);
 
         // Confetti Fireworks Particles Group for Victory
@@ -1041,41 +1466,45 @@
         const confettiParticles = [];
         const confettiColors = [0xff0055, 0x00ffcc, 0xffcc00, 0xffffff, 0x9900ff, 0x33ff33];
 
-        function spawnConfetti(x, y, z) {
-            for (let i = 0; i < 90; i++) {
+        function spawnConfetti(x, y, z, count = 100) {
+            for (let i = 0; i < count; i++) {
                 const col = confettiColors[Math.floor(Math.random() * confettiColors.length)];
-                const geo = new THREE.BoxGeometry(0.18, 0.18, 0.18);
+                const geo = new THREE.BoxGeometry(0.2, 0.2, 0.2);
                 const mat = new THREE.MeshBasicMaterial({ color: col });
                 const m = new THREE.Mesh(geo, mat);
                 m.position.set(x, y + 2, z);
                 confettiGroup.add(m);
                 confettiParticles.push({
                     mesh: m,
-                    vx: (Math.random() - 0.5) * 0.45,
-                    vy: Math.random() * 0.5 + 0.25,
-                    vz: (Math.random() - 0.5) * 0.45,
-                    rotSpeed: Math.random() * 0.2
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: Math.random() * 0.55 + 0.3,
+                    vz: (Math.random() - 0.5) * 0.5,
+                    rotSpeed: Math.random() * 0.22
                 });
             }
         }
 
         /* ----------------------------------------------------
-           5. Player Physics & Logic State
+           6. Player Physics, Buffs & Controls Logic
         ---------------------------------------------------- */
         let spawnPoint = { x: 0, y: 1.5, z: 0 };
         const player = {
             x: 0, y: 1.5, z: 0,
             vx: 0, vy: 0, vz: 0,
-            baseSpeed: 0.17,
-            speed: 0.17,
-            baseJump: 0.28,
-            jumpForce: 0.28,
+            baseSpeed: 0.175,
+            speed: 0.175,
+            baseJump: 0.285,
+            jumpForce: 0.285,
             gravity: 0.013,
             isGrounded: true,
             rotY: 0,
             shieldActive: false,
             speedBuffTimer: 0,
-            jumpBuffTimer: 0
+            jumpBuffTimer: 0,
+            starBuffTimer: 0,
+            punchBuffTimer: 0,
+            magnetBuffTimer: 0,
+            rocketBuffTimer: 0
         };
 
         let starsCollected = 0;
@@ -1087,6 +1516,7 @@
         let timerInterval = null;
 
         function startTimer() {
+            if (timerInterval) clearInterval(timerInterval);
             timerInterval = setInterval(() => {
                 if (!gameActive) return;
                 gameTime++;
@@ -1094,7 +1524,6 @@
                 const secs = String(gameTime % 60).padStart(2, '0');
                 document.getElementById('timer-text').innerText = `${mins}:${secs}`;
 
-                // Update Buff Timers
                 updateBuffs();
             }, 1000);
         }
@@ -1102,20 +1531,51 @@
 
         function updateBuffs() {
             let buffHtml = "";
+
+            if (player.rocketBuffTimer > 0) {
+                player.rocketBuffTimer--;
+                player.speed = player.baseSpeed * 1.75;
+                buffHtml += `<div class="buff-pill" style="border-color:#ff0055;">🚀 로켓 비행 (${player.rocketBuffTimer}s)</div>`;
+                rocketPack.visible = true;
+            } else {
+                rocketPack.visible = false;
+            }
+
             if (player.speedBuffTimer > 0) {
                 player.speedBuffTimer--;
-                player.speed = player.baseSpeed * 1.55; // 55% Speed Boost!
+                if (player.rocketBuffTimer <= 0) player.speed = player.baseSpeed * 1.55;
                 buffHtml += `<div class="buff-pill" style="border-color:#facc15;">⚡ 스피드 UP (${player.speedBuffTimer}s)</div>`;
-            } else {
+            } else if (player.rocketBuffTimer <= 0) {
                 player.speed = player.baseSpeed;
             }
 
             if (player.jumpBuffTimer > 0) {
                 player.jumpBuffTimer--;
-                player.jumpForce = player.baseJump * 1.38; // 38% Jump Boost!
+                player.jumpForce = player.baseJump * 1.4;
                 buffHtml += `<div class="buff-pill" style="border-color:#22c55e;">🦘 점프력 UP (${player.jumpBuffTimer}s)</div>`;
             } else {
                 player.jumpForce = player.baseJump;
+            }
+
+            if (player.starBuffTimer > 0) {
+                player.starBuffTimer--;
+                buffHtml += `<div class="buff-pill" style="border-color:#ffd700;">⭐ 무적 스타 (${player.starBuffTimer}s)</div>`;
+                starAura.visible = true;
+            } else {
+                starAura.visible = false;
+            }
+
+            if (player.punchBuffTimer > 0) {
+                player.punchBuffTimer--;
+                buffHtml += `<div class="buff-pill" style="border-color:#ef4444;">🥊 파이어 펀치 (${player.punchBuffTimer}s)</div>`;
+                punchGlove.visible = true;
+            } else {
+                punchGlove.visible = false;
+            }
+
+            if (player.magnetBuffTimer > 0) {
+                player.magnetBuffTimer--;
+                buffHtml += `<div class="buff-pill" style="border-color:#8b5cf6;">🧲 슈퍼 자석 (${player.magnetBuffTimer}s)</div>`;
             }
 
             if (player.shieldActive) {
@@ -1142,7 +1602,7 @@
             "메롱~ 우진이 번지점프! 😜",
             "어디 가니 우진아~ 🤣",
             "와-와-와-와앙~ 다시 도전! 💨",
-            "으악! 발 헛디뎠다! 🤪",
+            "으악! 몬스터한테 깜짝! 🤪",
             "바람과 함께 사라진 우진이~ 🍃"
         ];
 
@@ -1161,7 +1621,7 @@
         }
 
         /* ----------------------------------------------------
-           6. Virtual Touch Joystick & Jump Button Controls
+           7. Virtual Joystick & Touch Controls
         ---------------------------------------------------- */
         const joystickZone = document.getElementById('joystick-zone');
         const joystickThumb = document.getElementById('joystick-thumb');
@@ -1210,7 +1670,7 @@
             let dx = touchX - centerX;
             let dy = touchY - centerY;
             const dist = Math.sqrt(dx * dx + dy * dy);
-            const maxR = 42;
+            const maxR = 40;
 
             if (dist > maxR) {
                 dx = (dx / dist) * maxR;
@@ -1222,16 +1682,30 @@
             joyVector.y = dy / maxR;
         }
 
+        let isJumpHeld = false;
         function doJump() {
             initAudio();
-            if (player.isGrounded && gameActive) {
+            if (!gameActive) return;
+
+            // 🚀 Rocket flying mode: Jump flies upward continuously!
+            if (player.rocketBuffTimer > 0) {
+                player.vy = 0.22;
+                player.isGrounded = false;
+                playRocketSound();
+                return;
+            }
+
+            if (player.isGrounded) {
                 player.vy = player.jumpForce;
                 player.isGrounded = false;
                 playJumpSound();
             }
         }
-        jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); doJump(); }, { passive: false });
-        jumpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); doJump(); });
+
+        jumpBtn.addEventListener('touchstart', (e) => { e.preventDefault(); isJumpHeld = true; doJump(); }, { passive: false });
+        jumpBtn.addEventListener('touchend', () => { isJumpHeld = false; });
+        jumpBtn.addEventListener('mousedown', (e) => { e.preventDefault(); isJumpHeld = true; doJump(); });
+        window.addEventListener('mouseup', () => { isJumpHeld = false; });
 
         window.addEventListener('touchstart', () => { initAudio(); }, { once: true });
         window.addEventListener('click', () => { initAudio(); }, { once: true });
@@ -1242,52 +1716,153 @@
             keys[e.code] = true;
             if (e.code === 'Space') {
                 e.preventDefault();
+                isJumpHeld = true;
                 doJump();
             }
         });
-        window.addEventListener('keyup', (e) => { keys[e.code] = false; });
+        window.addEventListener('keyup', (e) => {
+            keys[e.code] = false;
+            if (e.code === 'Space') isJumpHeld = false;
+        });
 
         /* ----------------------------------------------------
-           7. Game Loop & Physics Collision
+           8. TOP 5 Leaderboard (localStorage & Live Render)
+        ---------------------------------------------------- */
+        const LEADERBOARD_KEY = 'woojin_obby_records_v2';
+        const defaultRecords = [
+            { name: "10살 우진", timeSec: 165, date: "챔피언" },
+            { name: "번개민준", timeSec: 195, date: "도전자" },
+            { name: "점프서연", timeSec: 230, date: "도전자" },
+            { name: "날쌘지호", timeSec: 265, date: "도전자" },
+            { name: "용감한다은", timeSec: 300, date: "도전자" }
+        ];
+
+        function getLeaderboard() {
+            try {
+                const data = localStorage.getItem(LEADERBOARD_KEY);
+                if (data) return JSON.parse(data);
+            } catch(e) {}
+            return defaultRecords;
+        }
+
+        function saveLeaderboard(list) {
+            try {
+                localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+            } catch(e) {}
+        }
+
+        function formatSec(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function renderLeaderboard() {
+            const records = getLeaderboard();
+            const listEl = document.getElementById('lb-list-content');
+            listEl.innerHTML = '';
+
+            records.slice(0, 5).forEach((rec, idx) => {
+                const li = document.createElement('li');
+                li.className = `lb-item rank${idx + 1}`;
+                const medal = (idx === 0) ? '🥇' : (idx === 1) ? '🥈' : (idx === 2) ? '🥉' : `${idx + 1}위`;
+                li.innerHTML = `
+                    <span>${medal} <span class="lb-name">${rec.name}</span></span>
+                    <span class="lb-time">${formatSec(rec.timeSec)}</span>
+                `;
+                listEl.appendChild(li);
+            });
+        }
+        renderLeaderboard();
+
+        let lbExpanded = true;
+        function toggleLeaderboard() {
+            const listEl = document.getElementById('lb-list-content');
+            const btn = document.getElementById('lb-toggle-btn');
+            lbExpanded = !lbExpanded;
+            listEl.style.display = lbExpanded ? 'flex' : 'none';
+            btn.innerText = lbExpanded ? '▲' : '▼';
+        }
+
+        function submitPlayerRecord() {
+            const input = document.getElementById('player-name-input');
+            const rawName = input.value.trim();
+            const playerName = rawName || "우진이 친구";
+
+            const records = getLeaderboard();
+            records.push({
+                name: playerName,
+                timeSec: gameTime,
+                date: new Date().toLocaleDateString()
+            });
+
+            // Sort ascending by timeSec
+            records.sort((a, b) => a.timeSec - b.timeSec);
+            saveLeaderboard(records);
+            renderLeaderboard();
+
+            // Find player rank
+            const playerRank = records.findIndex(r => r.name === playerName && r.timeSec === gameTime) + 1;
+            const alertBox = document.getElementById('rank-alert-box');
+
+            if (playerRank <= 5) {
+                // 🎉 Top 5 Celebration Fanfare & Double Fireworks!
+                playTop5FanfareSound();
+                spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z, 140);
+                alertBox.className = 'top5';
+                alertBox.style.display = 'block';
+                alertBox.innerHTML = `🎉 대박! 축하합니다! <b>TOP ${playerRank}위</b> 명예의 전당 등극! 🏆`;
+            } else {
+                alertBox.style.display = 'block';
+                alertBox.style.background = '#e2e8f0';
+                alertBox.style.color = '#334155';
+                alertBox.innerHTML = `👍 훌륭해요! 전체 <b>${playerRank}위</b>로 기록되었습니다!`;
+            }
+
+            document.getElementById('record-register-box').style.display = 'none';
+        }
+
+        /* ----------------------------------------------------
+           9. Main Game Loop & Interaction Checks
         ---------------------------------------------------- */
         let animClock = 0;
 
         function animate() {
             requestAnimationFrame(animate);
 
-            // ================= CINEMATIC VICTORY CAMERA ORBIT =================
+            // Victory 360-degree orbit cinematic cutscene
             if (isVictoryCutscene) {
                 cutsceneTimer += 0.016;
-                orbitAngle += 0.022; // 360-degree smooth orbit!
+                orbitAngle += 0.022; // Smooth 360 orbit
 
                 // Woojin Victory Cheering Pose (Face front, arms waving high!)
-                woojin.rotation.y = 0; // Look directly towards front!
+                woojin.rotation.y = 0;
                 leftArmGroup.rotation.x = 2.8 + Math.sin(cutsceneTimer * 8) * 0.25;
                 rightArmGroup.rotation.x = 2.8 - Math.sin(cutsceneTimer * 8) * 0.25;
                 leftLegGroup.rotation.x = Math.sin(cutsceneTimer * 10) * 0.15;
                 rightLegGroup.rotation.x = -Math.sin(cutsceneTimer * 10) * 0.15;
 
-                // Close-Up 360 Degree Camera Orbiting Woojin's Smiling Face
-                const orbitRadius = 3.6;
+                // Close-Up 360 Orbit Camera on Smiling Face
+                const orbitRadius = 3.8;
                 camera.position.x = woojin.position.x + Math.sin(orbitAngle) * orbitRadius;
                 camera.position.z = woojin.position.z + Math.cos(orbitAngle) * orbitRadius;
-                camera.position.y = woojin.position.y + 1.25; // Eye-level close up!
+                camera.position.y = woojin.position.y + 1.25;
                 camera.lookAt(woojin.position.x, woojin.position.y + 1.35, woojin.position.z);
 
-                // Update Confetti Particles
+                // Confetti Particles
                 for (const p of confettiParticles) {
                     p.mesh.position.x += p.vx;
                     p.mesh.position.y += p.vy;
                     p.mesh.position.z += p.vz;
-                    p.vy -= 0.007; // Gravity
+                    p.vy -= 0.007;
                     p.mesh.rotation.x += p.rotSpeed;
                     p.mesh.rotation.y += p.rotSpeed;
                 }
 
                 trophyGroup.rotation.y += 0.03;
 
-                // After 3.6 seconds of beautiful 360 cinematic, show final results modal!
-                if (cutsceneTimer > 3.6 && document.getElementById('win-modal').style.display !== 'flex') {
+                // Show Final Results & Name Input Modal after 3.5s
+                if (cutsceneTimer > 3.5 && document.getElementById('win-modal').style.display !== 'flex') {
                     document.getElementById('cutscene-title').style.display = 'none';
                     document.getElementById('win-stars').innerText = starsCollected;
                     document.getElementById('win-time').innerText = document.getElementById('timer-text').innerText;
@@ -1313,9 +1888,17 @@
                 inputZ /= inputLen;
             }
 
+            // Rocket Flight Continuous Rise when Jump is held
+            if (player.rocketBuffTimer > 0 && isJumpHeld) {
+                player.vy = 0.22;
+                player.isGrounded = false;
+                flame1.scale.y = 1.2 + Math.random() * 0.8;
+                flame2.scale.y = 1.2 + Math.random() * 0.8;
+            }
+
             if (gameActive) {
                 player.vx = inputX * player.speed;
-                if (Math.abs(player.vz) < 0.25 || player.isGrounded) {
+                if (Math.abs(player.vz) < 0.25 || player.isGrounded || player.rocketBuffTimer > 0) {
                     player.vz = inputZ * player.speed;
                 } else {
                     player.vz *= 0.985;
@@ -1337,7 +1920,9 @@
                     rightLegGroup.rotation.x *= 0.8;
                 }
 
-                player.vy -= player.gravity;
+                // Gravity: heavily reduced if rocket booster is active
+                const currentGravity = (player.rocketBuffTimer > 0) ? 0.003 : player.gravity;
+                player.vy -= currentGravity;
 
                 player.x += player.vx;
                 player.y += player.vy;
@@ -1349,7 +1934,7 @@
                     const margin = 0.45;
                     if (player.x >= plat.minX - margin && player.x <= plat.maxX + margin &&
                         player.z >= plat.minZ - margin && player.z <= plat.maxZ + margin) {
-                        if (player.y <= plat.topY + 0.15 && player.y >= plat.topY - 0.7 && player.vy <= 0) {
+                        if (player.y <= plat.topY + 0.18 && player.y >= plat.topY - 0.7 && player.vy <= 0) {
                             player.y = plat.topY;
                             player.vy = 0;
                             player.vz = 0;
@@ -1359,15 +1944,15 @@
                     }
                 }
 
-                // Super Spring Pad Check
+                // Super Spring Pads Check
                 for (const pad of springPads) {
                     const dist = Math.hypot(player.x - pad.x, player.z - pad.z);
-                    if (dist < pad.width / 2 && Math.abs(player.y - pad.y) < 0.7) {
-                        player.vy = 0.46;
-                        player.vz = 0.36;
+                    if (dist < pad.width / 2 && Math.abs(player.y - pad.y) < 0.75) {
+                        player.vy = pad.vy;
+                        player.vz = pad.vz;
                         player.isGrounded = false;
                         playSpringSound();
-                        showBanner("🚀 슈퍼 점프! 핑크섬으로 슝~");
+                        showBanner("🚀 슈퍼 점프! 하늘로 슝~");
                         break;
                     }
                 }
@@ -1384,11 +1969,23 @@
                     }
                 }
 
-                // Stars Collect
+                // Stars Collect & 🧲 Magnet attraction
                 for (const s of stars) {
                     if (!s.collected) {
                         s.group.rotation.y += 0.04;
                         s.group.rotation.x += 0.02;
+
+                        // Magnet pull effect
+                        if (player.magnetBuffTimer > 0) {
+                            const magDist = Math.hypot(player.x - s.x, player.y - s.y, player.z - s.z);
+                            if (magDist < 12.0) {
+                                s.x += (player.x - s.x) * 0.12;
+                                s.y += (player.y - s.y) * 0.12;
+                                s.z += (player.z - s.z) * 0.12;
+                                s.group.position.set(s.x, s.y, s.z);
+                            }
+                        }
+
                         const dist = Math.hypot(player.x - s.x, player.y - s.y, player.z - s.z);
                         if (dist < 1.4) {
                             s.collected = true;
@@ -1400,11 +1997,11 @@
                     }
                 }
 
-                // Power-Up Items Collect Check!
+                // Power Items Pickup Check
                 for (const itm of powerItems) {
                     if (!itm.collected) {
                         itm.group.rotation.y += 0.05;
-                        itm.group.position.y = itm.y + Math.sin(Date.now() * 0.005) * 0.15; // Hovering!
+                        itm.group.position.y = itm.y + Math.sin(Date.now() * 0.005) * 0.15;
                         const dist = Math.hypot(player.x - itm.x, player.y - itm.y, player.z - itm.z);
                         if (dist < 1.5) {
                             itm.collected = true;
@@ -1412,21 +2009,110 @@
                             playItemSound();
 
                             if (itm.type === 'speed') {
-                                player.speedBuffTimer = 12; // 12 seconds
+                                player.speedBuffTimer = 12;
                                 showBanner("⚡ 스피드 부스터 획득! (12초)", "item");
                             } else if (itm.type === 'shield') {
                                 player.shieldActive = true;
                                 showBanner("🛡️ 무적 쉴드 장착! (1회 보호)", "item");
                             } else if (itm.type === 'jump') {
-                                player.jumpBuffTimer = 12; // 12 seconds
+                                player.jumpBuffTimer = 12;
                                 showBanner("🦘 슈퍼 점프력 UP! (12초)", "item");
+                            } else if (itm.type === 'star') {
+                                player.starBuffTimer = 10;
+                                showBanner("⭐ 황금 무적 스타! 적들을 날려버려!", "item");
+                            } else if (itm.type === 'punch') {
+                                player.punchBuffTimer = 12;
+                                showBanner("🥊 파이어 펀치 장착! 몬스터 격퇴!", "item");
+                            } else if (itm.type === 'magnet') {
+                                player.magnetBuffTimer = 15;
+                                showBanner("🧲 슈퍼 자석 장착! 황금별 흡수!", "item");
+                            } else if (itm.type === 'rocket') {
+                                player.rocketBuffTimer = 16;
+                                showBanner("🚀 [1% 대박] 황금 로켓 장착! 하늘을 날아라!", "item");
+                            } else if (itm.type === 'mystery') {
+                                // 1% 확률 🚀 황금 로켓 부스터!
+                                const isLuckyRocket = Math.random() < 0.01;
+                                if (isLuckyRocket) {
+                                    player.rocketBuffTimer = 16;
+                                    showBanner("🚀 [1% 잭팟 대박!!] 황금 로켓 부스터 획득!", "item");
+                                } else {
+                                    player.starBuffTimer = 8;
+                                    player.speedBuffTimer = 8;
+                                    showBanner("🎁 미스터리 파워업: 스타 + 스피드 획득!", "item");
+                                }
                             }
                             updateBuffs();
                         }
                     }
                 }
 
-                // Laser Hazard Check (Shield Protection Support!)
+                // 👾 Cute Obstacle Enemies Patrol & Interactions!
+                for (const e of enemies) {
+                    if (!e.isDead) {
+                        // Patrol movement
+                        e.currentPos += e.dir * e.speed;
+                        if (e.currentPos > e.patrolMax) e.dir = -1;
+                        if (e.currentPos < e.patrolMin) e.dir = 1;
+
+                        if (e.patrolAxis === 'x') {
+                            e.group.position.x = e.currentPos;
+                        } else {
+                            e.group.position.z = e.currentPos;
+                        }
+                        // Bouncy walking hop
+                        e.group.position.y = e.baseY + Math.abs(Math.sin(Date.now() * 0.007)) * 0.22;
+
+                        const dx = player.x - e.group.position.x;
+                        const dz = player.z - e.group.position.z;
+                        const distToEnemy = Math.hypot(dx, dz);
+
+                        // 1) 👟 Stomp Kill (위에서 밟아서 처치!)
+                        if (player.vy < -0.01 && player.y > e.group.position.y + 0.38 && distToEnemy < 1.25) {
+                            e.isDead = true;
+                            e.group.scale.set(1.3, 0.2, 1.3);
+                            player.vy = 0.32; // Bounce up!
+                            playEnemyDefeatSound();
+                            showBanner("👾 몬스터 밟기 성공! 뿅~", "item");
+                            spawnSparks(e.group.position.x, e.group.position.y, e.group.position.z);
+                            continue;
+                        }
+
+                        // 2) 💥 Item Attack Kill (스타 / 펀치 / 로켓으로 돌파!)
+                        if (player.starBuffTimer > 0 || player.punchBuffTimer > 0 || player.rocketBuffTimer > 0) {
+                            if (distToEnemy < 1.4 && Math.abs(player.y - e.group.position.y) < 1.0) {
+                                e.isDead = true;
+                                e.group.position.y += 10; // Sent flying!
+                                playEnemyDefeatSound();
+                                showBanner("💥 슈퍼 파워로 몬스터 격퇴!", "item");
+                                spawnSparks(e.group.position.x, e.group.position.y, e.group.position.z);
+                                continue;
+                            }
+                        }
+
+                        // 3) ⚠️ Normal Hurt Collision
+                        if (distToEnemy < 1.15 && Math.abs(player.y - e.group.position.y) < 0.85) {
+                            if (player.shieldActive) {
+                                player.shieldActive = false;
+                                updateBuffs();
+                                playShieldBlockSound();
+                                showBanner("🛡️ 쉴드가 몬스터 공격을 막아냈습니다!");
+                                // Knock back player slightly
+                                player.vz -= 0.15;
+                            } else {
+                                respawn();
+                            }
+                            break;
+                        }
+                    } else {
+                        // Dead enemy animation fade
+                        e.deadTimer += 0.016;
+                        if (e.deadTimer > 1.2 && e.group.parent) {
+                            scene.remove(e.group);
+                        }
+                    }
+                }
+
+                // Laser Hazard Check (Shield Protection)
                 for (const h of hazards) {
                     h.mesh.rotation.y += h.speed;
                     const dx = player.x - h.centerX;
@@ -1434,7 +2120,6 @@
                     const distToCenter = Math.hypot(dx, dz);
                     if (distToCenter < h.length / 2 && Math.abs(player.y - h.y) < 0.75) {
                         if (player.shieldActive) {
-                            // 🛡️ Shield blocks hazard!
                             player.shieldActive = false;
                             updateBuffs();
                             playShieldBlockSound();
@@ -1446,14 +2131,28 @@
                     }
                 }
 
-                // Fall into Void check
-                if (player.y < -6) {
+                // Void fall check
+                if (player.y < -7) {
                     respawn();
                 }
 
-                // Goal Trophy Check (Start Victory Cutscene!)
-                if (player.z >= 158 && player.y >= 11.0) {
+                // Goal Trophy Check (Stage 20 Clear!)
+                if (player.z >= 362 && player.y >= 21.0) {
                     startVictoryCutscene();
+                }
+            }
+
+            // Update Spark Particles
+            for (let i = sparkParticles.length - 1; i >= 0; i--) {
+                const sp = sparkParticles[i];
+                sp.mesh.position.x += sp.vx;
+                sp.mesh.position.y += sp.vy;
+                sp.mesh.position.z += sp.vz;
+                sp.vy -= 0.01;
+                sp.life -= 0.03;
+                if (sp.life <= 0) {
+                    scene.remove(sp.mesh);
+                    sparkParticles.splice(i, 1);
                 }
             }
 
@@ -1462,26 +2161,22 @@
             trophyGroup.rotation.y += 0.02;
 
             // Normal Camera Follow
-            const camOffsetX = 0;
-            const camOffsetY = 15;
-            const camOffsetZ = -14;
-
-            const targetCamX = player.x + camOffsetX;
-            const targetCamY = player.y + camOffsetY;
-            const targetCamZ = player.z + camOffsetZ;
+            const targetCamX = player.x;
+            const targetCamY = player.y + 14.5;
+            const targetCamZ = player.z - 14.0;
 
             camera.position.x += (targetCamX - camera.position.x) * 0.1;
             camera.position.y += (targetCamY - camera.position.y) * 0.1;
             camera.position.z += (targetCamZ - camera.position.z) * 0.1;
 
-            camera.lookAt(player.x, player.y + 1.2, player.z + 4);
+            camera.lookAt(player.x, player.y + 1.2, player.z + 4.0);
 
             renderer.render(scene, camera);
         }
         animate();
 
         /* ----------------------------------------------------
-           8. Victory Cutscene & Restart
+           10. Victory Cutscene & Restart & Sharing
         ---------------------------------------------------- */
         function startVictoryCutscene() {
             if (!gameActive) return;
@@ -1491,14 +2186,11 @@
             cutsceneTimer = 0;
             orbitAngle = 0;
 
-            // Play grand victory fanfare
             playWinSound();
 
-            // Spawn Confetti fireworks around Woojin!
-            spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z);
-            setTimeout(() => spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z), 1200);
+            spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z, 110);
+            setTimeout(() => spawnConfetti(woojin.position.x, woojin.position.y, woojin.position.z, 110), 1200);
 
-            // Display Celebration Title
             document.getElementById('cutscene-title').style.display = 'block';
             document.getElementById('touch-controls').style.display = 'none';
         }
@@ -1507,25 +2199,35 @@
             document.getElementById('win-modal').style.display = 'none';
             document.getElementById('cutscene-title').style.display = 'none';
             document.getElementById('touch-controls').style.display = 'flex';
+            document.getElementById('record-register-box').style.display = 'block';
+            document.getElementById('rank-alert-box').style.display = 'none';
             isVictoryCutscene = false;
 
-            // Clean up confetti
             while (confettiGroup.children.length > 0) {
                 confettiGroup.remove(confettiGroup.children[0]);
             }
             confettiParticles.length = 0;
 
-            // Reset player and powerups
             player.shieldActive = false;
             player.speedBuffTimer = 0;
             player.jumpBuffTimer = 0;
+            player.starBuffTimer = 0;
+            player.punchBuffTimer = 0;
+            player.magnetBuffTimer = 0;
+            player.rocketBuffTimer = 0;
             updateBuffs();
 
-            // Reset items
             for (const itm of powerItems) {
                 if (itm.collected) {
                     itm.collected = false;
                     scene.add(itm.group);
+                }
+            }
+
+            for (const s of stars) {
+                if (s.collected) {
+                    s.collected = false;
+                    scene.add(s.group);
                 }
             }
 
@@ -1540,13 +2242,15 @@
         }
 
         function shareGame() {
-            const url = window.location.href;
+            const timeStr = document.getElementById('win-time').innerText;
+            const shareText = `🏆 10살 우진이의 20단계 슈퍼 로블록스 점프맵 완전 정복!\n⏱️ 내 클리어 기록은 [${timeStr}]초야! 너 나 이길 수 있어? 지금 링크 눌러서 도전해봐!\n${window.location.href}`;
+
             if (navigator.clipboard) {
-                navigator.clipboard.writeText(url).then(() => {
-                    alert("주소가 복사되었습니다! 카톡 채팅방에 바로 붙여넣기(Ctrl+V)해서 친구들에게 공유해 보세요!");
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert("도전장 초대 문구와 게임 주소가 복사되었습니다! 카카오톡 채팅방에 바로 붙여넣기(Ctrl+V)해서 친구들에게 도전장을 보내보세요!");
                 });
             } else {
-                alert("이 주소를 복사해 공유하세요: " + url);
+                alert("도전장 공유 주소:\n" + shareText);
             }
         }
 
