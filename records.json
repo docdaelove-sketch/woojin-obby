@@ -2,26 +2,36 @@
   {
     "name": "10살 우진",
     "timeSec": 165,
+    "baseTime": 165,
+    "missedStars": 0,
     "date": "챔피언"
   },
   {
     "name": "번개민준",
     "timeSec": 195,
+    "baseTime": 195,
+    "missedStars": 0,
     "date": "도전자"
   },
   {
     "name": "점프서연",
     "timeSec": 230,
+    "baseTime": 230,
+    "missedStars": 0,
     "date": "도전자"
   },
   {
     "name": "날쌘지호",
     "timeSec": 265,
+    "baseTime": 265,
+    "missedStars": 0,
     "date": "도전자"
   },
   {
     "name": "용감한다은",
     "timeSec": 300,
+    "baseTime": 300,
+    "missedStars": 0,
     "date": "도전자"
   }
 ]
