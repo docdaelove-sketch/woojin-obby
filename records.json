@@ -89,5 +89,12 @@
     "baseTime": 57,
     "missedStars": 11,
     "date": "2026. 10. 16."
+  },
+  {
+    "name": "개구마르",
+    "timeSec": 1469,
+    "baseTime": 29,
+    "missedStars": 24,
+    "date": "2026. 10. 16."
   }
 ]
