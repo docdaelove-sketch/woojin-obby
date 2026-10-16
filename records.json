@@ -63,6 +63,13 @@
     "date": "도전자"
   },
   {
+    "name": "개굴",
+    "timeSec": 298,
+    "baseTime": 58,
+    "missedStars": 4,
+    "date": "2026. 10. 16."
+  },
+  {
     "name": "용감한다은",
     "timeSec": 300,
     "baseTime": 300,
