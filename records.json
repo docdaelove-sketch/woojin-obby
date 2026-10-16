@@ -68,5 +68,12 @@
     "baseTime": 300,
     "missedStars": 0,
     "date": "도전자"
+  },
+  {
+    "name": "좨지",
+    "timeSec": 717,
+    "baseTime": 57,
+    "missedStars": 11,
+    "date": "2026. 10. 16."
   }
 ]
