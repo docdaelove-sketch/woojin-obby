@@ -77,6 +77,13 @@
     "date": "2026. 10. 15."
   },
   {
+    "name": "돼지",
+    "timeSec": 105,
+    "baseTime": 45,
+    "missedStars": 1,
+    "date": "2026. 10. 20."
+  },
+  {
     "name": "어라",
     "timeSec": 114,
     "baseTime": 54,
