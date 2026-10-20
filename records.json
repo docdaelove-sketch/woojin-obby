@@ -155,6 +155,13 @@
   },
   {
     "name": "신우형",
+    "timeSec": 1065,
+    "baseTime": 45,
+    "missedStars": 17,
+    "date": "2026. 10. 20."
+  },
+  {
+    "name": "신우형",
     "timeSec": 1073,
     "baseTime": 53,
     "missedStars": 17,
