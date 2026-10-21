@@ -147,6 +147,13 @@
     "date": "도전자"
   },
   {
+    "name": "우진이 친구",
+    "timeSec": 500,
+    "baseTime": 200,
+    "missedStars": 5,
+    "date": "2026. 10. 21."
+  },
+  {
     "name": "김우진",
     "timeSec": 579,
     "baseTime": 39,
@@ -201,12 +208,5 @@
     "baseTime": 29,
     "missedStars": 21,
     "date": "2026. 10. 17."
-  },
-  {
-    "name": "개구마르",
-    "timeSec": 1469,
-    "baseTime": 29,
-    "missedStars": 24,
-    "date": "2026. 10. 16."
   }
 ]
