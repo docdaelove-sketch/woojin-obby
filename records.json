@@ -154,6 +154,13 @@
     "date": "도전자"
   },
   {
+    "name": "윤아♡",
+    "timeSec": 320,
+    "baseTime": 80,
+    "missedStars": 4,
+    "date": "2026. 10. 22."
+  },
+  {
     "name": "우진이 친구",
     "timeSec": 500,
     "baseTime": 200,
@@ -200,13 +207,6 @@
     "timeSec": 1124,
     "baseTime": 44,
     "missedStars": 18,
-    "date": "2026. 10. 20."
-  },
-  {
-    "name": "신우형",
-    "timeSec": 1174,
-    "baseTime": 34,
-    "missedStars": 19,
     "date": "2026. 10. 20."
   }
 ]
