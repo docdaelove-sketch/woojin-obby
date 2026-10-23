@@ -35,6 +35,13 @@
     "date": "2026. 10. 15."
   },
   {
+    "name": "ㅛ3ㅎ",
+    "timeSec": 48,
+    "baseTime": 48,
+    "missedStars": 0,
+    "date": "2026. 10. 23."
+  },
+  {
     "name": "킹콩Tina",
     "timeSec": 49,
     "baseTime": 49,
@@ -200,13 +207,6 @@
     "timeSec": 1073,
     "baseTime": 53,
     "missedStars": 17,
-    "date": "2026. 10. 20."
-  },
-  {
-    "name": "신우형",
-    "timeSec": 1124,
-    "baseTime": 44,
-    "missedStars": 18,
     "date": "2026. 10. 20."
   }
 ]
