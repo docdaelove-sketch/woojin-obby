@@ -1,5 +1,12 @@
 [
   {
+    "name": "뚱돼지혜승",
+    "timeSec": 38,
+    "baseTime": 38,
+    "missedStars": 0,
+    "date": "2026. 10. 27."
+  },
+  {
     "name": "김우진 개구",
     "timeSec": 40,
     "baseTime": 40,
@@ -200,13 +207,6 @@
     "timeSec": 579,
     "baseTime": 39,
     "missedStars": 9,
-    "date": "2026. 10. 16."
-  },
-  {
-    "name": "좨지",
-    "timeSec": 717,
-    "baseTime": 57,
-    "missedStars": 11,
     "date": "2026. 10. 16."
   }
 ]
