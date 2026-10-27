@@ -70,6 +70,13 @@
     "date": "2026. 10. 18."
   },
   {
+    "name": "일론머스크",
+    "timeSec": 54,
+    "baseTime": 54,
+    "missedStars": 0,
+    "date": "2026. 10. 27."
+  },
+  {
     "name": "신우형",
     "timeSec": 59,
     "baseTime": 59,
@@ -201,12 +208,5 @@
     "baseTime": 51,
     "missedStars": 12,
     "date": "2026. 10. 17."
-  },
-  {
-    "name": "신우형",
-    "timeSec": 1065,
-    "baseTime": 45,
-    "missedStars": 17,
-    "date": "2026. 10. 20."
   }
 ]
