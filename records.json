@@ -21,6 +21,13 @@
     "date": "2026. 10. 20."
   },
   {
+    "name": "트럼프",
+    "timeSec": 46,
+    "baseTime": 46,
+    "missedStars": 0,
+    "date": "2026. 10. 27."
+  },
+  {
     "name": "김우진",
     "timeSec": 47,
     "baseTime": 47,
@@ -201,12 +208,5 @@
     "baseTime": 57,
     "missedStars": 11,
     "date": "2026. 10. 16."
-  },
-  {
-    "name": "ㅕㅕ",
-    "timeSec": 771,
-    "baseTime": 51,
-    "missedStars": 12,
-    "date": "2026. 10. 17."
   }
 ]
