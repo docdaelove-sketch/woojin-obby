@@ -21,6 +21,13 @@
     "date": "2026. 10. 29."
   },
   {
+    "name": "김산오",
+    "timeSec": 43,
+    "baseTime": 43,
+    "missedStars": 0,
+    "date": "2026. 10. 29."
+  },
+  {
     "name": "근돼혜승",
     "timeSec": 44,
     "baseTime": 44,
@@ -201,12 +208,5 @@
     "baseTime": 300,
     "missedStars": 0,
     "date": "도전자"
-  },
-  {
-    "name": "윤아♡",
-    "timeSec": 320,
-    "baseTime": 80,
-    "missedStars": 4,
-    "date": "2026. 10. 22."
   }
 ]
