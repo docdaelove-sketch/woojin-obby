@@ -14,6 +14,13 @@
     "date": "2026. 10. 27."
   },
   {
+    "name": "김우진3",
+    "timeSec": 40,
+    "baseTime": 40,
+    "missedStars": 0,
+    "date": "2026. 10. 29."
+  },
+  {
     "name": "근돼혜승",
     "timeSec": 44,
     "baseTime": 44,
@@ -201,12 +208,5 @@
     "baseTime": 80,
     "missedStars": 4,
     "date": "2026. 10. 22."
-  },
-  {
-    "name": "우진이 친구",
-    "timeSec": 500,
-    "baseTime": 200,
-    "missedStars": 5,
-    "date": "2026. 10. 21."
   }
 ]
