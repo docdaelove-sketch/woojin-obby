@@ -7,6 +7,13 @@
     "date": "2026. 10. 27."
   },
   {
+    "name": "김우진개구!",
+    "timeSec": 38,
+    "baseTime": 38,
+    "missedStars": 0,
+    "date": "2026. 10. 30."
+  },
+  {
     "name": "김우진 개구",
     "timeSec": 40,
     "baseTime": 40,
@@ -201,12 +208,5 @@
     "baseTime": 97,
     "missedStars": 2,
     "date": "2026. 10. 21."
-  },
-  {
-    "name": "점프서연",
-    "timeSec": 230,
-    "baseTime": 230,
-    "missedStars": 0,
-    "date": "도전자"
   }
 ]
