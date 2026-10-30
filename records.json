@@ -28,6 +28,13 @@
     "date": "2026. 10. 29."
   },
   {
+    "name": "신우",
+    "timeSec": 42,
+    "baseTime": 42,
+    "missedStars": 0,
+    "date": "2026. 10. 30."
+  },
+  {
     "name": "김산오",
     "timeSec": 43,
     "baseTime": 43,
@@ -199,13 +206,6 @@
     "name": "점프서연",
     "timeSec": 230,
     "baseTime": 230,
-    "missedStars": 0,
-    "date": "도전자"
-  },
-  {
-    "name": "날쌘지호",
-    "timeSec": 265,
-    "baseTime": 265,
     "missedStars": 0,
     "date": "도전자"
   }
