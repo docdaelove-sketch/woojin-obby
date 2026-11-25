@@ -35,6 +35,13 @@
     "date": "2026. 10. 29."
   },
   {
+    "name": "고딘리",
+    "timeSec": 41,
+    "baseTime": 41,
+    "missedStars": 0,
+    "date": "2026. 11. 25."
+  },
+  {
     "name": "신우",
     "timeSec": 42,
     "baseTime": 42,
@@ -201,12 +208,5 @@
     "baseTime": 165,
     "missedStars": 0,
     "date": "챔피언"
-  },
-  {
-    "name": "윤아♡",
-    "timeSec": 176,
-    "baseTime": 116,
-    "missedStars": 1,
-    "date": "2026. 11. 8."
   }
 ]
